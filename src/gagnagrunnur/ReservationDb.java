@@ -5,6 +5,6 @@ import vinnsla.Date;
 
 public interface ReservationDb {
 
-    public boolean book(Date date, Customer customer, int noOfSeats);
+    public boolean reserveTour(Date date, Customer customer, int noOfSeats);
 
 }

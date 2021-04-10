@@ -1,6 +1,5 @@
 package gagnagrunnur;
 
-import gagnagrunnur.ReservationDb;
 import vinnsla.Customer;
 import vinnsla.Date;
 
@@ -19,7 +18,7 @@ public class ReservationDbMock implements ReservationDb {
      *         made sure the inputs do not cause failures.
      */
     @Override
-    public boolean book(Date date, Customer customer, int noOfSeats){
+    public boolean reserveTour(Date date, Customer customer, int noOfSeats){
         return true;
     }
 }

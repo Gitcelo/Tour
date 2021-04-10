@@ -30,5 +30,3 @@ CREATE TABLE IF NOT EXISTS Customers (
     email varchar(128),
     primary key(name, email)
 );
-
---Database ready--
