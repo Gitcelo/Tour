@@ -7,8 +7,8 @@
 
 ## Database setup
 * Download the sqlite jdbc drivers from here: https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-* To use the drivers within an IDE put the .jar file into the IDE's classpath or run MakeDatabase.java
-in a terminal with the following command: `java -cp ${Pat}\sqlite-jdbc-3.34.0.jar; gagnagrunnur.MakeDatabase` 
+* To use the drivers within an IDE put the .jar file into the IDE's classpath or run MakeDatabase.java 
+in a terminal with the following command: \n `java -cp ${Path to folder containing}\sqlite-jdbc-3.34.0.jar; gagnagrunnur.MakeDatabase` 
   
 * Use `MakeDatabase.java` in the package `gagnagrunnur` to create the .db database file.
 
