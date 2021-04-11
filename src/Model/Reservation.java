@@ -1,8 +1,7 @@
-package vinnsla;
+package Model;
 
 public class Reservation {
-    private Date dateRef;
-    private Customer customerRef;
+    private TourDate dateRef;
     private String reservationId;
     private int seats;
     
@@ -14,24 +13,33 @@ public class Reservation {
      * @param seats
      */
 
-    public Reservation(Date dateRef, Customer customerRef, String reservationId, int seats) {
+    public Reservation(TourDate dateRef, String reservationId, int seats) {
         this.dateRef = dateRef;
-        this.customerRef = customerRef;
         this.reservationId = reservationId;
         this.seats = seats;
     }
 
-    public Customer getCustomer(){
-        return customerRef;
-    }
+    
 
-    public Date getDate(){
+    /**
+     * 
+     * @return the object containing information on this reservation
+     */
+    public TourDate getDate(){
         return dateRef;
     }
-
+    /**
+     * 
+     * @return seats needed for this reservation
+     */
     public int getSeats(){
         return seats;
     }
+
+    /**
+     * 
+     * @return id of this reservation
+     */
     public String getReservationId(){
         return reservationId;
     }
