@@ -1,5 +1,5 @@
-CREATE TABLE IF NOT EXISTS Tours (
-    tourId serial primary key,
+CREATE TABLE Tours (
+    tourId INTEGER PRIMARY KEY,
     tourName varchar(128) NOT NULL,
     price int NOT NULL,
     description varchar(2000),
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS Tours (
     providerName varchar(128)
 );
 
-CREATE TABLE IF NOT EXISTS Dates (
+CREATE TABLE Dates (
     tourId int NOT NULL,
     tourDate date NOT NULL,
     availableSeats int NOT NULL,
@@ -15,7 +15,13 @@ CREATE TABLE IF NOT EXISTS Dates (
     FOREIGN KEY(tourId) REFERENCES Tours(tourId)
 );
 
-CREATE TABLE IF NOT EXISTS Reservations(
+CREATE TABLE Customers (
+    name varchar(128),
+    email varchar(128),
+    primary key(name, email)
+);
+
+CREATE TABLE Reservations(
     tourId int NOT NULL,
     tourDate date NOT NULL,
     noOfSeats int NOT NULL,
@@ -25,10 +31,4 @@ CREATE TABLE IF NOT EXISTS Reservations(
     FOREIGN KEY(customerName, customerEmail) REFERENCES Customers(name, email)
 );
 
-CREATE TABLE IF NOT EXISTS Customers (
-    name varchar(128),
-    email varchar(128),
-    primary key(name, email)
-);
-
---Database ready--
+--Database created--
