@@ -1,11 +1,11 @@
-package vinnsla;
+package Controller;
 
 import data.ReservationDb;
 
 import java.util.Comparator;
+import Model.*;
 
 public class ReservationController {
-    private int s = 5;
     private ReservationDb resDb;
 
     public ReservationController(ReservationDb resDb) {
@@ -16,9 +16,12 @@ public class ReservationController {
         return 5;
     }
 
-    public boolean makeReservation(Date date, Customer customer, int noOfSeats) {
+    public boolean makeReservation(TourDate date, int noOfSeats) {
 
         Comparator<ReservationController> comparator = Comparator.comparingInt(ReservationController::getInt);
         return true;
     }
+    
+
+
 }
