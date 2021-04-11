@@ -1,4 +1,4 @@
-package gagnagrunnur;
+package data;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 public class PopulateDatabase {
     private static String url;
@@ -195,7 +194,7 @@ public class PopulateDatabase {
         String root = System.getProperty("user.dir");
         String separator = System.getProperty("file.separator");
         String dir = root.replace(separator, "/");
-        String dbName = dir + "/gagnagrunnur/tour.db";
+        String dbName = dir + "/data/tour.db";
         url = "jdbc:sqlite:" + dbName;
         realFile(dbName);
         if(real) {

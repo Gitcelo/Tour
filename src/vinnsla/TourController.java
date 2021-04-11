@@ -2,7 +2,7 @@ package vinnsla;
 
 import java.time.LocalDate;
 
-import gagnagrunnur.TourDb; //eigum eftir að stofna pakka
+import data.TourDb; //eigum eftir að stofna pakka
 
 public class TourController {
     private TourDb tourDb;

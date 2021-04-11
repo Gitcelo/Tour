@@ -1,20 +1,19 @@
-package gagnagrunnur;
+package data;
 
 import java.io.*;
 import java.sql.*;
-import java.nio.file.Files;
 
 public class MakeDatabase {
-    private static void createDatabase() {
+    private static void createDatabase() throws SQLException {
         InputStream scriptStream = null;
         Connection conn = null;
         Statement stmt = null;
         String root = System.getProperty("user.dir");
         String separator = System.getProperty("file.separator");
         String dir = root.replace(separator, "/");
-        String dbName = dir + "/gagnagrunnur/tour.db";
+        String dbName = dir + "/data/tour.db";
         String url = "jdbc:sqlite:" + dbName;
-        String schema = dir + "/gagnagrunnur/schema.sql";
+        String schema = dir + "/data/schema.sql";
         StringBuffer command=null;
 
         try {
@@ -49,11 +48,15 @@ public class MakeDatabase {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            conn.close();
+            if(conn!=null) conn.close();
         }
     }
 
     public static void main(String[] args) {
-        createDatabase();
+        try {
+            createDatabase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

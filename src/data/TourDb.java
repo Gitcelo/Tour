@@ -1,4 +1,4 @@
-package gagnagrunnur;
+package data;
 
 import java.time.LocalDate;
 

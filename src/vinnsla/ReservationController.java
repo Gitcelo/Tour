@@ -1,6 +1,6 @@
 package vinnsla;
 
-import gagnagrunnur.ReservationDb;
+import data.ReservationDb;
 
 import java.util.Comparator;
 

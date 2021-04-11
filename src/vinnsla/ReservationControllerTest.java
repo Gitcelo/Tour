@@ -1,6 +1,6 @@
 package vinnsla;
 
-import gagnagrunnur.ReservationDbMock;
+import data.ReservationDbMock;
 import org.junit.*;
 import static org.junit.Assert.*;
 
