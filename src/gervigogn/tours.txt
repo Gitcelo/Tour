@@ -1,2 +1,1 @@
-Gullni hringurinn,10000,NULL,10,Icelandair
-Into the Glacier,20,lmaooo,11,Háskóli Íslands
+Gullni hringurinn,10000,NULL,10,Stykkishólmur,1,4,Icelandair

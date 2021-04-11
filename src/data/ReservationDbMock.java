@@ -1,6 +1,5 @@
 package data;
 
-import vinnsla.Customer;
 import vinnsla.Date;
 
 /**

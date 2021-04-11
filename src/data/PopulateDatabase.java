@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 public class PopulateDatabase {
     private static String url;
@@ -29,8 +30,11 @@ public class PopulateDatabase {
         +"price,"
         +"description,"
         +"difficulty,"
+        +"location,"
+        +"childFriendly,"
+        +"season,"
         +"providerName)"
-        +"values(?,?,?,?,?);";
+        +"values(?,?,?,?,?,?,?,?);";
         Connection conn = null;
         Statement stmt;
         PreparedStatement ps;
@@ -49,6 +53,9 @@ public class PopulateDatabase {
                 ps.setString(3, lineArray[2]);
                 ps.setInt(4, Integer.parseInt(lineArray[3]));
                 ps.setString(5, lineArray[4]);
+                ps.setInt(6, Integer.parseInt(lineArray[5]));
+                ps.setInt(7, Integer.parseInt(lineArray[6]));
+                ps.setString(8, lineArray[7]);
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -67,8 +74,9 @@ public class PopulateDatabase {
         String query = "INSERT INTO Dates"
                 +"(tourId,"
                 +"tourDate,"
-                +"availableSeats)"
-                +"values(?,?,?);";
+                +"availableSeats,"
+                +"maxAvailableSeats)"
+                +"values(?,?,?,?);";
         Connection conn = null;
         Statement stmt;
         PreparedStatement ps;
@@ -79,15 +87,17 @@ public class PopulateDatabase {
             stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("dates.txt");
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd-HH");
             String line;
             while((line=br.readLine())!=null) {
-                String[] lineArray = line.split(",");
+                String[] stringArray = line.split(",");
+                String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
                 ps.setInt(1, Integer.parseInt(lineArray[0]));
                 java.util.Date date = sdf.parse(lineArray[1]);
                 java.sql.Date sqlDate = new Date(date.getTime());
                 ps.setDate(2, sqlDate);
-                ps.setString(3, lineArray[2]);
+                ps.setInt(3, Integer.parseInt(lineArray[2]));
+                ps.setInt(4, Integer.parseInt(lineArray[3]));
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -101,49 +111,16 @@ public class PopulateDatabase {
         }
     }
 
-    public static void makeCustomers() throws SQLException {
-        String trunc = "DELETE FROM Customers";
-        String query = "INSERT INTO Customers"
-                +"(name,"
-                +"email)"
-                +"values(?,?);";
-        Connection conn = null;
-        Statement stmt;
-        PreparedStatement ps;
-        try {
-            conn = DriverManager.getConnection(url);
-            conn.setAutoCommit(false);
-            stmt = conn.createStatement();
-            stmt.executeUpdate(trunc);
-            ps = conn.prepareStatement(query);
-            BufferedReader br = readFile("customers.txt");
-            String line;
-            while((line=br.readLine())!=null) {
-                String[] lineArray = line.split(",");
-                ps.setString(1, lineArray[0]);
-                ps.setString(2, lineArray[1]);
-                ps.addBatch();
-            }
-            ps.executeBatch();
-            conn.commit();
-            System.out.println("Customers populated");
-        } catch (SQLException | IOException e) {
-            System.out.println("Failed to populate Customers");
-            e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
-        }
-    }
-
     public static void makeReservations() throws SQLException {
         String trunc = "DELETE FROM Reservations";
         String query = "INSERT INTO Reservations"
-                +"(tourId,"
+                +"(reservationId,"
+                +"tourId,"
                 +"tourDate,"
                 +"noOfSeats,"
                 +"customerName,"
                 +"customerEmail)"
-                +"values(?,?,?,?,?);";
+                +"values(?,?,?,?,?,?);";
         Connection conn = null;
         Statement stmt;
         PreparedStatement ps;
@@ -154,24 +131,25 @@ public class PopulateDatabase {
             stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("reservations.txt");
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd-HH");
             String line;
             while((line=br.readLine())!=null) {
                 String[] lineArray = line.split(",");
                 ps.setInt(1, Integer.parseInt(lineArray[0]));
-                java.util.Date date = sdf.parse(lineArray[1]);
+                ps.setInt(2, Integer.parseInt(lineArray[1]));
+                java.util.Date date = sdf.parse(lineArray[2]);
                 java.sql.Date sqlDate = new Date(date.getTime());
-                ps.setDate(2, sqlDate);
-                ps.setInt(3, Integer.parseInt(lineArray[2]));
-                ps.setString(4, lineArray[3]);
+                ps.setDate(3, sqlDate);
+                ps.setInt(4, Integer.parseInt(lineArray[3]));
                 ps.setString(5, lineArray[4]);
+                ps.setString(6, lineArray[5]);
                 ps.addBatch();
             }
             ps.executeBatch();
             conn.commit();
-            System.out.println("Dates populated");
+            System.out.println("Reservations populated");
         } catch (SQLException | IOException | ParseException e) {
-            System.out.println("Failed to populate Customers");
+            System.out.println("Failed to populate Reservations");
             e.printStackTrace();
         } finally {
             if(conn!=null) conn.close();
@@ -201,7 +179,6 @@ public class PopulateDatabase {
             try {
                 makeTours();
                 makeDates();
-                makeCustomers();
                 makeReservations();
             } catch (SQLException e) {
                 e.printStackTrace();
