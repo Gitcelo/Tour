@@ -2,82 +2,64 @@ package Model;
 
 import java.util.ArrayList;
 
-
 public class Tour {
     private ArrayList<TourDate> dates;
+    int tourId;
+    private String tourName;
     private String description;
     private int price;
-    private String tourName;
     private int difficulty;
-    private String providerName;
     private int location;
     private boolean childFriendly;
     private int season;
+    private String providerName;
 
 
     /** Constructor for a Tour object
      * 
      * @param dates Date object containing information on this tour
-     * @param description decription of the tour
-     * @param price price of the tour
-     * @param tourName name of tour
-     * @param difficulty tour difficulty: 10: disabled, 11-13: easy to hard
-     * @param providerName the name of the tour provider
+     * @param description Description of the tour
+     * @param price Price of the tour
+     * @param tourName Name of tour
+     * @param difficulty Tour difficulty: 10: disabled, 11-13: easy to hard
+     * @param location Location of the tour
+     * @param childFriendly Boolean that tells whether tour is child friendly or not
+     * @param season An integer value representing the season the tour is active in
+     * @param providerName The name of the tour provider
      */
-    public Tour(ArrayList<TourDate> dates, String description, int price, String tourName, int difficulty, String providerName, int location, boolean childFriendly, int season) {
+    public Tour(ArrayList<TourDate> dates, int tourId, String tourName, String description, int price, int difficulty, int location, boolean childFriendly, int season, String providerName) {
         this.dates = dates;
+        this.tourId = tourId;
+        this.tourName = tourName;
         this.description = description;
         this.price = price;
-        this.tourName = tourName;
         this.difficulty = difficulty;
-        this.providerName = providerName;
         this.location = location;
         this.childFriendly = childFriendly;
         this.season = season;
+        this.providerName = providerName;
     }
 
-    /**
-     * 
-     * @return a list of multiple Date objects for different trips based on this same tour
-     */
     public ArrayList<TourDate> getDate(){
         return dates;
     }
 
-    /**
-     * 
-     * @return description of this tour
-     */
+    public int getTourId() {return tourId;}
+
+    public String getTourName(){ return tourName; }
+
     public String getDescription(){
         return description;
     }
 
-    /**
-     * 
-     * @return price of this tour
-     */
     public int getPrice(){
         return price;
     }
-    
-    /**
-     * 
-     * @return name of tour
-     */
-    public String tourName(){
-        return tourName;
-    }
-    /**
-     * 
-     * @return int value on difficulty: 10 -> disabled 11-13 -> easy-hard
-     */
+
     public int getDifficulty(){
         return difficulty;
     }
-    /**
-     * 
-     * @return name of provider
-     */
+
     public String getProvider(){
         return providerName;
     }
@@ -90,10 +72,6 @@ public class Tour {
         return childFriendly;
     }
 
-    /**
-     * 
-     * @return number between 1-4 specifying the season in which the tour takes place
-     */
     public int getSeason(){
         return season;
     }

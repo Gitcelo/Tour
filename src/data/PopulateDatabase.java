@@ -17,7 +17,7 @@ public class PopulateDatabase {
     private static String filePath;
 
     private static BufferedReader readFile(String fileName) throws IOException {
-        fileName = "D:/Documents/Tour/src/gervigogn/" + fileName;
+        fileName = "D:/Documents/Tour/src/fakeData/" + fileName;
         Path path = Paths.get(fileName);
         BufferedReader br = Files.newBufferedReader(path);
         return br;

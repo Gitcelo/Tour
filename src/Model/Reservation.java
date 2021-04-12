@@ -19,27 +19,14 @@ public class Reservation {
         this.seats = seats;
     }
 
-    
-
-    /**
-     * 
-     * @return the object containing information on this reservation
-     */
     public TourDate getDate(){
         return dateRef;
     }
-    /**
-     * 
-     * @return seats needed for this reservation
-     */
+
     public int getSeats(){
         return seats;
     }
 
-    /**
-     * 
-     * @return id of this reservation
-     */
     public String getReservationId(){
         return reservationId;
     }
