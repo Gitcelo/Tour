@@ -27,7 +27,16 @@ public class ReservationDb {
         return new Date(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    public boolean makeReservation(Tour tour, TourDate date,String customerName, String customerEmail) {
+    /**
+     *
+     * @param tour
+     * @param date
+     * @param noOfSeats
+     * @param customerName
+     * @param customerEmail
+     * @return
+     */
+    public boolean makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
         String query = "INSERT INTO Reservations ("
                 + "reservationId,"
                 + "tourId,"
@@ -43,7 +52,14 @@ public class ReservationDb {
             long tourDate = sdf.parse(formattedDate).getTime();
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, Integer.toString(tour.getTourId()));
-            st.setString(2, Long.toString(tourDate));
+            st.setString(2, date.getDate().toString());
+            st.setString(3,Integer.toString(noOfSeats));
+            st.setString(4,customerName);
+            st.setString(5, customerEmail);
+
+            boolean result = (st.executeUpdate() > 0);
+            st.close();
+            return result;
         }catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
