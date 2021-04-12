@@ -49,6 +49,15 @@ public class Tour {
         if(season < 1 || season > 4) {
             throw new IllegalArgumentException("Season should be a value in [0,4]");
         }
+        if(tourName == null ) {
+            throw new IllegalArgumentException("tourName is not valid");
+        }
+        if(description == null ) {
+            throw new IllegalArgumentException("description is not valid");
+        }
+        if( providerName == null) {
+            throw new IllegalArgumentException("providerName is not valid");
+        }
 
         dates = new ArrayList<TourDate>();
         this.tourId = tourId;
@@ -101,5 +110,5 @@ public class Tour {
 
     public void setDates(ArrayList<TourDate> dates) {this.dates = dates;}
 
-    
+
 }

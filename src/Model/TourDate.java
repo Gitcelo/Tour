@@ -11,6 +11,9 @@ public class TourDate {
         if(maxSeats <= 0 || (availableSeats < 0 || availableSeats > maxSeats)) {
             throw new IllegalArgumentException("maxSeats is negative or available seats is not in [0,maxSeats]");
         }
+        if(date == null) {
+            throw new IllegalArgumentException("date is not valid");
+        }
         this.date = date;
         this.availableSeats = availableSeats;
         this.maxSeats = maxSeats;
