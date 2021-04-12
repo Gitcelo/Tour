@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 
 public class Tour {
     private ArrayList<TourDate> dates;
-    int tourId;
+    private int tourId;
     private String tourName;
     private String description;
     private int price;
@@ -14,7 +14,6 @@ public class Tour {
     private int location;
     private int childFriendly;
     private int season;
-    private int availableSeats;
     private String providerName;
 
     /**
@@ -23,12 +22,12 @@ public class Tour {
     public Tour() {}
 
     /** Constructor for a Tour object
-     * @param tourId id of tour
-     * @param description Description of the tour
-     * @param price Price of the tour
-     * @param tourName Name of tour
+     * @param tourId Id of tour object
+     * @param description Description of tour object
+     * @param price Price of tour object
+     * @param tourName Name of tour object
      * @param difficulty Tour difficulty: 10: disabled, 11-13: easy to hard
-     * @param location Location of the tour
+     * @param location Location of tour object
      * @param childFriendly An integer of value 0 or 1, 0 representing false and 1 representing true
      * @param season An integer between values 1-4, inclusive.
      * @param providerName The name of the tour provider

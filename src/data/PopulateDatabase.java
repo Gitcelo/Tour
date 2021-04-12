@@ -1,5 +1,8 @@
 package data;
 
+import Model.Tour;
+import Model.TourDate;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +17,15 @@ import java.util.Arrays;
 public class PopulateDatabase {
 
     private TourDb tdb;
+    private ReservationDb rdb;
     private Connection conn;
     private Statement stmt;
     private String url;
     private String dbName;
 
-    public PopulateDatabase() {
+    private PopulateDatabase() {
         tdb = new TourDb();
+        rdb = new ReservationDb();
         String[] strings = application.Utils.getUrlAndDatabase();
         url = strings[0];
         dbName = strings[1];
@@ -50,7 +55,7 @@ public class PopulateDatabase {
         }
     }
 
-    public void makeTours() throws SQLException {
+    private void makeTours() throws SQLException {
         try {
             BufferedReader br = readFile("tours.txt");
             String line;
@@ -76,7 +81,7 @@ public class PopulateDatabase {
         }
     }
 
-    public void makeDates() throws SQLException {
+    private void makeDates() throws SQLException {
         String query = "INSERT INTO Dates"
                 +"(tourId,"
                 +"tourDate,"
@@ -116,50 +121,7 @@ public class PopulateDatabase {
         }
     }
 
-    public void makeReservations() throws SQLException {
-        String query = "INSERT INTO Reservations"
-                +"(reservationId,"
-                +"tourId,"
-                +"tourDate,"
-                +"noOfSeats,"
-                +"customerName,"
-                +"customerEmail)"
-                +"values(?,?,?,?,?,?);";
-        Connection conn = null;
-        Statement stmt;
-        PreparedStatement ps;
-        try {
-            conn = DriverManager.getConnection(url);
-            conn.setAutoCommit(false);
-            stmt = conn.createStatement();
-            ps = conn.prepareStatement(query);
-            BufferedReader br = readFile("reservations.txt");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
-            String line;
-            while((line=br.readLine())!=null) {
-                String[] lineArray = line.split(",");
-                ps.setInt(1, Integer.parseInt(lineArray[0]));
-                ps.setInt(2, Integer.parseInt(lineArray[1]));
-                java.util.Date date = sdf.parse(lineArray[2]);
-                java.sql.Date sqlDate = new Date(date.getTime());
-                ps.setDate(3, sqlDate);
-                ps.setInt(4, Integer.parseInt(lineArray[3]));
-                ps.setString(5, lineArray[4]);
-                ps.setString(6, lineArray[5]);
-                ps.addBatch();
-            }
-            ps.executeBatch();
-            conn.commit();
-            System.out.println("Reservations populated");
-        } catch (SQLException | IOException | ParseException e) {
-            System.out.println("Failed to populate Reservations");
-            e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
-        }
-    }
-
-    public boolean realFile() {
+    private boolean realFile() {
         try {
             File dbFile = new File(dbName);
             if (dbFile.exists()) {
@@ -178,7 +140,6 @@ public class PopulateDatabase {
                 pd.clearTables();
                 pd.makeTours();
                 pd.makeDates();
-                pd.makeReservations();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

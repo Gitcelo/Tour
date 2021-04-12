@@ -10,12 +10,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import static application.Utils.getUrlAndDatabase;
 
 public class ReservationDb {
-    Connection conn = null;
+    private Connection conn = null;
+
+    public ReservationDb(){}
 
     /** Booking function.
      *
@@ -26,7 +27,7 @@ public class ReservationDb {
      * @param customerEmail email of the customer making reservation
      * @return true if booking successful, false otherwise
      */
-    public boolean makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
+    public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) throws SQLException {
         String query = "INSERT INTO Reservations ("
                 + "reservationId,"
                 + "tourId,"
@@ -41,27 +42,28 @@ public class ReservationDb {
             PreparedStatement st = conn.prepareStatement(query);
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as total FROM Reservations");
-            int resId = rs.getInt("total");
+            int resId = rs.getInt("total")+1;
+            String formatted = date.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
+            java.util.Date parsedDate = sdf.parse(formatted);
+            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
 
             //set variables
-            st.setString(1,Integer.toString(resId));
-            st.setString(2, Integer.toString(tour.getTourId()));
-            st.setString(3, date.getDate().toString());
-            st.setString(4,Integer.toString(noOfSeats));
+            st.setInt(1,resId);
+            st.setInt(2, tour.getTourId());
+            st.setDate(3, sqlDate);
+            st.setInt(4, noOfSeats);
             st.setString(5,customerName);
             st.setString(6, customerEmail);
-
-            boolean result = (st.executeUpdate() > 0);
+            st.executeUpdate();
             st.close();
-            return result;
-        }catch (SQLException e) {
+            conn.commit();
+            return resId;
+        }catch (SQLException | ParseException e) {
             e.printStackTrace();
+        } finally {
+            if(conn!=null) conn.close();
         }
-
-        return false;
+        return 0;
     }
-
-    public ReservationDb(){}
-
-
 }
