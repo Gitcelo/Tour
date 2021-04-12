@@ -101,7 +101,5 @@ public class Tour {
 
     public void setDates(ArrayList<TourDate> dates) {this.dates = dates;}
 
-    public static void main(String[] args) {
-
-    }
+    
 }
