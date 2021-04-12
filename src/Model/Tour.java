@@ -34,6 +34,22 @@ public class Tour {
      * @param providerName The name of the tour provider
      */
     public Tour(int tourId, String tourName, String description, int price, int difficulty, int childFriendly, int season, int location, String providerName) {
+        if(tourId <= 0) {
+            throw new IllegalArgumentException("tourId is invalid");
+        }
+        if(price < 0) {
+            throw new IllegalArgumentException("price is less than 0 ");
+        }
+        if(difficulty < 10 || difficulty > 13) {
+            throw new IllegalArgumentException("difficulty not valid value");
+        }
+        if(childFriendly < 0 || childFriendly > 1) {
+            throw new IllegalArgumentException("ChildFriendly should be either 0 or 1");
+        }
+        if(season < 1 || season > 4) {
+            throw new IllegalArgumentException("Season should be a value in [0,4]");
+        }
+
         dates = new ArrayList<TourDate>();
         this.tourId = tourId;
         this.tourName = tourName;
