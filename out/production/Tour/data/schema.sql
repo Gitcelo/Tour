@@ -4,7 +4,7 @@ CREATE TABLE Tours (
     price int NOT NULL,
     description varchar(2000),
     difficulty int NOT NULL,
-    location varchar(128) NOT NULL,
+    location int NOT NULL,
     childFriendly BOOLEAN NOT NULL CHECK(childFriendly IN (0,1)),
     season SEASON NOT NULL CHECK(season IN (1,2,3,4)),
     providerName varchar(128)
@@ -12,7 +12,7 @@ CREATE TABLE Tours (
 
 CREATE TABLE Dates (
     tourId int NOT NULL,
-    tourDate char(13) NOT NULL,
+    tourDate date NOT NULL,
     availableSeats int NOT NULL,
     maxAvailableSeats int NOT NULL,
     PRIMARY KEY(tourId, tourDate),
@@ -22,7 +22,7 @@ CREATE TABLE Dates (
 CREATE TABLE Reservations(
     reservationId UNIQUE NOT NULL,
     tourId int NOT NULL,
-    tourDate char(13) NOT NULL,
+    tourDate date NOT NULL,
     noOfSeats int NOT NULL,
     customerName varchar(128) NOT NULL,
     customerEmail varchar(128) NOT NULL,

@@ -1,5 +1,6 @@
 package Controller;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import Model.Tour;
 import javafx.collections.ObservableList;
@@ -10,7 +11,7 @@ import data.TourDb;
 public class TourController {
     private TourDb tourDb = new TourDb();
 
-    public ObservableList<Tour> searchTour(Parameters p) {
+    public ObservableList<Tour> searchTour(Parameters p) throws SQLException {
         int difficulty = p.getdifficulty();
         int[] price = {p.getLowerPrice(),p.getMaxPrice()};
         int groupSize = p.getgroupSize();
