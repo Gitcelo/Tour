@@ -15,18 +15,6 @@ import java.util.Date;
 public class ReservationDb {
     Connection conn = null;
 
-    private String getUrl() {
-        String root = System.getProperty("user.dir");
-        String separator = System.getProperty("file.separator");
-        String dir = root.replace(separator, "/");
-        String dbName = dir + "/data/tour.db";
-        return "jdbc:sqlite:" + dbName;
-    }
-
-    private LocalDateTime toLocalDateTime(long date) {
-        return new Date(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
     /**
      *
      * @param tour

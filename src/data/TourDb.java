@@ -10,26 +10,62 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
-import static application.Utils.getUrl;
+import static application.Utils.getUrlAndDatabase;
 import static application.Utils.toLocalDateTime;
 
 public class TourDb {
     Connection conn = null;
+    Statement stmt;
+    PreparedStatement ps;
+    ResultSet rs;
+    String url;
+
+    public TourDb() { url=getUrlAndDatabase()[0]; }
 
     //Skilar true ef insert náðist, annars false
-    public boolean makeTour(/*Einhverjir parametrar*/) {
-        return true;
+    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName) throws SQLException {
+        String query = "INSERT INTO Tours"
+                +"(tourName,"
+                +"price,"
+                +"description,"
+                +"difficulty,"
+                +"location,"
+                +"childFriendly,"
+                +"season,"
+                +"providerName) "
+                +"values(?,?,?,?,?,?,?,?);";
+        try {
+            conn = DriverManager.getConnection(url);
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, tourName);
+            ps.setInt(2, price);
+            ps.setString(3, description);
+            ps.setInt(4, difficulty);
+            ps.setInt(5, location);
+            ps.setInt(6, childFriendly);
+            ps.setInt(7, season);
+            ps.setString(8, providerName);
+            ps.execute();
+            conn.commit();
+            rs = stmt.executeQuery("SELECT last_insert_rowid();");
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(conn!=null) conn.close();
+        }
+        return 0;
     }
 
     //sækja tours útfrá þessum parametrum
-    public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) {
+    public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) throws SQLException {
         ObservableList<Tour> t = FXCollections.observableArrayList();
         LocalDateTime startDate = dateRange[0].atStartOfDay();
         LocalDateTime endDate = dateRange[1].atStartOfDay();
         long startDateMilli = startDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        System.out.println(startDateMilli);
         long endDateMilli = endDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        System.out.println(endDateMilli);
         String query = "SELECT Tours.*, Dates.tourDate, Dates.availableSeats, Dates.maxAvailableSeats "
                 +"FROM Tours, Dates "
                 +"WHERE Tours.tourId=Dates.tourId "
@@ -49,10 +85,10 @@ public class TourDb {
                 +endDateMilli
                 +" ORDER BY Tours.tourId;";
         try {
-            conn = DriverManager.getConnection(getUrl());
+            conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
             Tour currentTour = new Tour();
             ArrayList<TourDate> currentTourDates = new ArrayList<TourDate>();
             int currentId = 0;
@@ -89,6 +125,8 @@ public class TourDb {
             t.add(currentTour);
         } catch(SQLException e) {
             e.printStackTrace();
+        } finally {
+            if(conn!=null) conn.close();
         }
         return t;
     }

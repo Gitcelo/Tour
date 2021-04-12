@@ -12,54 +12,61 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 public class PopulateDatabase {
-    private static String url;
-    private static boolean real;
-    private static String filePath;
 
-    private static BufferedReader readFile(String fileName) throws IOException {
+    private TourDb tdb;
+    private Connection conn;
+    private Statement stmt;
+    private String url;
+    private String dbName;
+
+    public PopulateDatabase() {
+        tdb = new TourDb();
+        String[] strings = application.Utils.getUrlAndDatabase();
+        url = strings[0];
+        dbName = strings[1];
+    }
+
+    private BufferedReader readFile(String fileName) throws IOException {
         fileName = "D:/Documents/Tour/src/fakeData/" + fileName;
         Path path = Paths.get(fileName);
         BufferedReader br = Files.newBufferedReader(path);
         return br;
     }
 
-    public static void makeTours() throws SQLException {
-        String trunc = "DELETE FROM Tours";
-        String query = "INSERT INTO Tours"
-        +"(tourName,"
-        +"price,"
-        +"description,"
-        +"difficulty,"
-        +"location,"
-        +"childFriendly,"
-        +"season,"
-        +"providerName)"
-        +"values(?,?,?,?,?,?,?,?);";
-        Connection conn = null;
-        Statement stmt;
-        PreparedStatement ps;
+    private void clearTables() throws SQLException {
         try {
             conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
-            stmt.executeUpdate(trunc);
-            ps = conn.prepareStatement(query);
+            stmt.addBatch("DELETE FROM TOURS");
+            stmt.addBatch("DELETE FROM Dates");
+            stmt.addBatch("DELETE FROM Reservations");
+            stmt.executeBatch();
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(conn!=null) conn.close();
+        }
+    }
+
+    public void makeTours() throws SQLException {
+        try {
             BufferedReader br = readFile("tours.txt");
             String line;
             while((line=br.readLine())!=null) {
                 String[] lineArray = line.split(",");
-                ps.setString(1, lineArray[0]);
-                ps.setInt(2, Integer.parseInt(lineArray[1]));
-                ps.setString(3, lineArray[2]);
-                ps.setInt(4, Integer.parseInt(lineArray[3]));
-                ps.setInt(5, Integer.parseInt(lineArray[4]));
-                ps.setInt(6, Integer.parseInt(lineArray[5]));
-                ps.setInt(7, Integer.parseInt(lineArray[6]));
-                ps.setString(8, lineArray[7]);
-                ps.addBatch();
+                tdb.makeTour(
+                        lineArray[0],
+                        Integer.parseInt(lineArray[1]),
+                        lineArray[2],
+                        Integer.parseInt(lineArray[3]),
+                        Integer.parseInt(lineArray[4]),
+                        Integer.parseInt(lineArray[5]),
+                        Integer.parseInt(lineArray[6]),
+                        lineArray[7]
+                );
             }
-            ps.executeBatch();
-            conn.commit();
             System.out.println("Tours populated");
         } catch (SQLException | IOException e) {
             System.out.println("Failed to populate Tours");
@@ -69,8 +76,7 @@ public class PopulateDatabase {
         }
     }
 
-    public static void makeDates() throws SQLException {
-        String trunc = "DELETE FROM Dates";
+    public void makeDates() throws SQLException {
         String query = "INSERT INTO Dates"
                 +"(tourId,"
                 +"tourDate,"
@@ -84,7 +90,6 @@ public class PopulateDatabase {
             conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
-            stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("dates.txt");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
@@ -111,8 +116,7 @@ public class PopulateDatabase {
         }
     }
 
-    public static void makeReservations() throws SQLException {
-        String trunc = "DELETE FROM Reservations";
+    public void makeReservations() throws SQLException {
         String query = "INSERT INTO Reservations"
                 +"(reservationId,"
                 +"tourId,"
@@ -128,7 +132,6 @@ public class PopulateDatabase {
             conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
-            stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("reservations.txt");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
@@ -156,30 +159,26 @@ public class PopulateDatabase {
         }
     }
 
-    public static void realFile(String file) {
+    public boolean realFile() {
         try {
-            File dbFile = new File(file);
+            File dbFile = new File(dbName);
             if (dbFile.exists()) {
-                real = true;
-                return;
+                return true;
             }
         } catch (Exception e) {
-            System.out.println("File " + file + "does not exist.");
+            return false;
         }
+        return false;
     }
 
     public static void main(String[] args) {
-        String root = System.getProperty("user.dir");
-        String separator = System.getProperty("file.separator");
-        String dir = root.replace(separator, "/");
-        String dbName = dir + "/data/tour.db";
-        url = "jdbc:sqlite:" + dbName;
-        realFile(dbName);
-        if(real) {
+        PopulateDatabase pd = new PopulateDatabase();
+        if(pd.realFile()) {
             try {
-                makeTours();
-                makeDates();
-                makeReservations();
+                pd.clearTables();
+                pd.makeTours();
+                pd.makeDates();
+                pd.makeReservations();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
