@@ -14,7 +14,7 @@ CREATE TABLE Dates (
     tourId int NOT NULL,
     tourDate date NOT NULL,
     availableSeats int NOT NULL,
-    maxAvailableSeats int NOT NULL,
+    maxAvailableSeats int NOT NULL CHECK(maxAvailableSeats>availableSeats),
     PRIMARY KEY(tourId, tourDate),
     FOREIGN KEY(tourId) REFERENCES Tours(tourId)
 );
