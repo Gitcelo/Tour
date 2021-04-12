@@ -8,6 +8,9 @@ public class TourDate {
     private int maxSeats;
 
     public TourDate(LocalDateTime date, int availableSeats, int maxSeats) {
+        if(maxSeats <= 0 || (availableSeats < 0 || availableSeats > maxSeats)) {
+            throw new IllegalArgumentException("maxSeats is negative or available seats is not in [0,maxSeats]");
+        }
         this.date = date;
         this.availableSeats = availableSeats;
         this.maxSeats = maxSeats;
