@@ -21,7 +21,8 @@ public class TourDb {
         String root = System.getProperty("user.dir");
         String separator = System.getProperty("file.separator");
         String dir = root.replace(separator, "/");
-        String dbName = dir + "/data/tour.db";
+        String dbName = dir + "/src/data/tour.db";
+        System.out.println(dbName);
         return "jdbc:sqlite:" + dbName;
     }
 
@@ -37,31 +38,31 @@ public class TourDb {
     //sækja tours útfrá þessum parametrum
     public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) {
         ObservableList<Tour> t = FXCollections.observableArrayList();
-        try {
-        String format = "yyyy-MM-dd-HH";
-        String formatStart = dateRange[0].format(DateTimeFormatter.ofPattern(format));
-        String formatEnd = dateRange[1].format(DateTimeFormatter.ofPattern(format));
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        long startDate = sdf.parse(formatStart).getTime();
-        long endDate = sdf.parse(formatEnd).getTime();
-        String query = "SELECT Tours.*, Dates.tourDate, Dates.availableSeats, Dates.maxAvailableSeats"
-                +"FROM Tours, Dates"
-                +"WHERE Tours.tourId=Dates.tourId"
+        LocalDateTime startDate = dateRange[0].atStartOfDay();
+        LocalDateTime endDate = dateRange[1].atStartOfDay();
+        long startDateMilli = startDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        System.out.println(startDateMilli);
+        long endDateMilli = endDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        System.out.println(endDateMilli);
+        String query = "SELECT Tours.*, Dates.tourDate, Dates.availableSeats, Dates.maxAvailableSeats "
+                +"FROM Tours, Dates "
+                +"WHERE Tours.tourId=Dates.tourId "
                 +"AND difficulty="
                 +difficulty
-                +"AND price BETWEEN"
+                +" AND price BETWEEN "
                 +priceRange[0]
-                +"AND"
+                +" AND "
                 +priceRange[1]
-                +"AND availableSeats>="
+                +" AND availableSeats>="
                 +groupSize
-                +"AND location="
+                +" AND location="
                 +location
-                +"AND tourDate BETWEEN"
-                +startDate
-                +"AND"
-                +endDate
-                +"ORDER BY Tours.tourId;";
+                +" AND tourDate BETWEEN "
+                +startDateMilli
+                +" AND "
+                +endDateMilli
+                +" ORDER BY Tours.tourId;";
+        try {
             conn = DriverManager.getConnection(getUrl());
             conn.setAutoCommit(false);
             Statement stmt = conn.createStatement();
@@ -98,7 +99,9 @@ public class TourDb {
                 );
                 currentTourDates.add(td);
             }
-        } catch(SQLException | ParseException e) {
+            currentTour.setDates(currentTourDates);
+            t.add(currentTour);
+        } catch(SQLException e) {
             e.printStackTrace();
         }
         return t;

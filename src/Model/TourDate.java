@@ -8,7 +8,6 @@ public class TourDate {
     private int maxSeats;
     //private Customer[] waitingList; --Nota queue gagnaskipan ef við implementum
 
-
     public TourDate(LocalDateTime date, int availableSeats, int maxSeats) {
         this.date = date;
         this.availableSeats = availableSeats;

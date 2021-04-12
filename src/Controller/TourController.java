@@ -8,7 +8,7 @@ import application.Parameters;
 import data.TourDb;
 
 public class TourController {
-    private TourDb tourDb;
+    private TourDb tourDb = new TourDb();
 
     public ObservableList<Tour> searchTour(Parameters p) {
         int difficulty = p.getdifficulty();

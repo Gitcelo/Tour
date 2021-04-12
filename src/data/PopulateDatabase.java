@@ -52,7 +52,7 @@ public class PopulateDatabase {
                 ps.setInt(2, Integer.parseInt(lineArray[1]));
                 ps.setString(3, lineArray[2]);
                 ps.setInt(4, Integer.parseInt(lineArray[3]));
-                ps.setString(5, lineArray[4]);
+                ps.setInt(5, Integer.parseInt(lineArray[4]));
                 ps.setInt(6, Integer.parseInt(lineArray[5]));
                 ps.setInt(7, Integer.parseInt(lineArray[6]));
                 ps.setString(8, lineArray[7]);

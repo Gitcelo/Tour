@@ -34,7 +34,7 @@ public class Tour {
      * @param providerName The name of the tour provider
      */
     public Tour(int tourId, String tourName, String description, int price, int difficulty, int childFriendly, int season, int location, String providerName) {
-        dates = new ArrayList<TourDate>(); //Vil ekki upphafssetja með tilbúinn lista
+        dates = new ArrayList<TourDate>();
         this.tourId = tourId;
         this.tourName = tourName;
         this.description = description;

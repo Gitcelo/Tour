@@ -32,9 +32,9 @@ public class Parameters {
 	 * @param groupS amount of members in the group
 	 * @param dateRange array size 2 of starting date and end date
 	 * @param from airport of departure
-	 * @param destination of the trip
+	 * @param to of the trip
 	 */
-	Parameters (int dif, int [] priceRange,
+	public Parameters (int dif, int [] priceRange,
 				int groupS, LocalDate [] dateRange, int from, int to)
 	{
 		setDifficulty(dif);
@@ -53,7 +53,7 @@ public class Parameters {
 	/**
 	 * empty constructor for Parameter object
 	 */
-	Parameters () {
+	public Parameters () {
 		price = new int [2];
 	}
 
@@ -79,7 +79,7 @@ public class Parameters {
 
 	private void setCheckIn(LocalDate in) {
 		LocalDate today = LocalDate.now();
-		if (today.isBefore(checkIn))
+		if (today.isBefore(in))
 			checkIn = in;
 		else
 			printError ("bokking date must be in the future");
