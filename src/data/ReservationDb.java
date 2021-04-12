@@ -15,7 +15,7 @@ import java.util.Date;
 import static application.Utils.getUrl;
 
 public class ReservationDb {
-    static Connection conn = null;
+    Connection conn = null;
 
 
     private LocalDateTime toLocalDateTime(long date) {
@@ -31,7 +31,7 @@ public class ReservationDb {
      * @param customerEmail email of the customer making reservation
      * @return true if booking successful, false otherwise
      */
-    public static boolean makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
+    public boolean makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
         String query = "INSERT INTO Reservations ("
                 + "reservationId,"
                 + "tourId,"
@@ -47,8 +47,7 @@ public class ReservationDb {
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as total FROM Reservations");
             int resId = 0;
-            resId = rs.getInt("total") + 1;
-
+            resId = rs.getInt("total");
 
             //set variables
             st.setString(1,Integer.toString(resId));
@@ -69,5 +68,6 @@ public class ReservationDb {
     }
 
     public ReservationDb(){}
+
 
 }
