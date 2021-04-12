@@ -1,7 +1,5 @@
 package data;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import Model.Tour;
 import Model.TourDate;
@@ -10,25 +8,13 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+
+import static application.Utils.getUrl;
+import static application.Utils.toLocalDateTime;
 
 public class TourDb {
     Connection conn = null;
-
-    private String getUrl() {
-        String root = System.getProperty("user.dir");
-        String separator = System.getProperty("file.separator");
-        String dir = root.replace(separator, "/");
-        String dbName = dir + "/src/data/tour.db";
-        System.out.println(dbName);
-        return "jdbc:sqlite:" + dbName;
-    }
-
-    private LocalDateTime toLocalDateTime(long date) {
-        return new Date(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
 
     //Skilar true ef insert náðist, annars false
     public boolean makeTour(/*Einhverjir parametrar*/) {

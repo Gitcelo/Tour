@@ -6,7 +6,6 @@ public class TourDate {
     private LocalDateTime date; //Date frá java.utils
     private int availableSeats;
     private int maxSeats;
-    //private Customer[] waitingList; --Nota queue gagnaskipan ef við implementum
 
     public TourDate(LocalDateTime date, int availableSeats, int maxSeats) {
         this.date = date;

@@ -46,7 +46,7 @@ public class Tour {
         this.providerName = providerName;
     }
 
-    public ArrayList<TourDate> getDate(){
+    public ArrayList<TourDate> getDates(){
         return dates;
     }
 
