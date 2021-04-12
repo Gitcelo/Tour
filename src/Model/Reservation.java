@@ -14,6 +14,9 @@ public class Reservation {
      */
 
     public Reservation(TourDate dateRef, String reservationId, int seats) {
+        if(seats < 0) {
+            throw new IllegalArgumentException("Seats cannot be negative");
+        }
         this.dateRef = dateRef;
         this.reservationId = reservationId;
         this.seats = seats;
