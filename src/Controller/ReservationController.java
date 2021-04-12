@@ -1,16 +1,14 @@
 package Controller;
 
-import data.ReservationDb;
-
 import java.util.Comparator;
 import Model.*;
 
 public class ReservationController {
-    private ReservationDb resDb;
+   // private ReservationDb resDb;
 
-    public ReservationController(ReservationDb resDb) {
+   /* public ReservationController(ReservationDb resDb) {
         this.resDb = resDb;
-    }
+    }*/
 
     public int getInt() {
         return 5;

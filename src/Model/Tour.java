@@ -1,6 +1,8 @@
 package Model;
 
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Tour {
     private ArrayList<TourDate> dates;
@@ -10,25 +12,29 @@ public class Tour {
     private int price;
     private int difficulty;
     private int location;
-    private boolean childFriendly;
+    private int childFriendly;
     private int season;
+    private int availableSeats;
     private String providerName;
 
+    /**
+     * Constructor for empty Tour object
+     */
+    public Tour() {}
 
     /** Constructor for a Tour object
-     * 
-     * @param dates Date object containing information on this tour
+     * @param tourId id of tour
      * @param description Description of the tour
      * @param price Price of the tour
      * @param tourName Name of tour
      * @param difficulty Tour difficulty: 10: disabled, 11-13: easy to hard
      * @param location Location of the tour
-     * @param childFriendly Boolean that tells whether tour is child friendly or not
-     * @param season An integer value representing the season the tour is active in
+     * @param childFriendly An integer of value 0 or 1, 0 representing false and 1 representing true
+     * @param season An integer between values 1-4, inclusive.
      * @param providerName The name of the tour provider
      */
-    public Tour(ArrayList<TourDate> dates, int tourId, String tourName, String description, int price, int difficulty, int location, boolean childFriendly, int season, String providerName) {
-        this.dates = dates;
+    public Tour(int tourId, String tourName, String description, int price, int difficulty, int childFriendly, int season, int location, String providerName) {
+        dates = new ArrayList<TourDate>(); //Vil ekki upphafssetja með tilbúinn lista
         this.tourId = tourId;
         this.tourName = tourName;
         this.description = description;
@@ -69,10 +75,13 @@ public class Tour {
     }
 
     public boolean isChildFriendly(){
-        return childFriendly;
+        if(childFriendly==1) return true;
+        return false;
     }
 
     public int getSeason(){
         return season;
     }
+
+    public void setDates(ArrayList<TourDate> dates) {this.dates = dates;}
 }

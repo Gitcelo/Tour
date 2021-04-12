@@ -2,23 +2,20 @@ package Controller;
 
 import java.time.LocalDate;
 import Model.Tour;
-import utils.Parameters;
+import javafx.collections.ObservableList;
+import application.Parameters;
 
 import data.TourDb;
 
 public class TourController {
     private TourDb tourDb;
 
-
-    //Kommentaði þetta út svo ég fái ekki endalausa villumeldingu meðan ég vinn í TourDb. Það má alveg afkommenta
-
-    //Parameter is a T team component - spurning hvort þetta sé besta leiðin til að vinna með Parameter
-   /* public Tour[] searchTour(Parameters p) {
+    public ObservableList<Tour> searchTour(Parameters p) {
         int difficulty = p.getdifficulty();
-        int[] price = p.getPrice();
-        int groupSize = p.getGroupSize();
-        int location = p.getLocation();
-        LocalDate[] dateRange = {p.getCheckIn(),p.getCheckOut()};
-        return tourDb.fetchTours(difficulty, price, groupSize, destination, dateRange); 
-    }*/
+        int[] price = {p.getLowerPrice(),p.getMaxPrice()};
+        int groupSize = p.getgroupSize();
+        int location = p.getDestination();
+        LocalDate[] dateRange = {p.getcheckIn(),p.getcheckOut()};
+        return tourDb.fetchTours(difficulty, price, groupSize, location, dateRange);
+    }
 }

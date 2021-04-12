@@ -87,7 +87,7 @@ public class PopulateDatabase {
             stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("dates.txt");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd-HH");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             String line;
             while((line=br.readLine())!=null) {
                 String[] stringArray = line.split(",");
@@ -131,7 +131,7 @@ public class PopulateDatabase {
             stmt.executeUpdate(trunc);
             ps = conn.prepareStatement(query);
             BufferedReader br = readFile("reservations.txt");
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd-HH");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             String line;
             while((line=br.readLine())!=null) {
                 String[] lineArray = line.split(",");

@@ -1,9 +1,5 @@
 package data;
 
-import vinnsla.Date;
-
-public interface ReservationDb {
-
-    public boolean reserveTour(Date date, Customer customer, int noOfSeats);
-
+public class ReservationDb {
+    public ReservationDb(){}
 }
