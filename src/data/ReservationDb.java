@@ -58,7 +58,8 @@ public class ReservationDb implements MakeConnection {
      */
     public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
         validConnection(conn);
-        String query = "INSERT INTO Reservations ("
+
+        String queryReservations = "INSERT INTO Reservations ("
                 + "reservationId,"
                 + "tourId,"
                 + "tourDate,"
@@ -66,9 +67,18 @@ public class ReservationDb implements MakeConnection {
                 + "customerName,"
                 + "customerEmail ) VALUES ("
                 + "?,?,?,?,?,?)";
+        String queryDate = "UPDATE Dates SET availableSeats = ? "
+                + "WHERE tourId = ? AND tourDate = ?";
         try {
             conn.setAutoCommit(false);
-            PreparedStatement st = conn.prepareStatement(query);
+            //update Dates
+            PreparedStatement pstDate = conn.prepareStatement(queryDate);
+            pstDate.setInt(1,date.getAvailableSeats() - noOfSeats);
+            pstDate.setInt(2,tour.getTourId());
+            pstDate.setDate(3,localDateTimeToSQLDate(date.getDate()));
+            pstDate.executeUpdate();
+            //Insert into reservation
+            PreparedStatement st = conn.prepareStatement(queryReservations);
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as total FROM Reservations");
             int resId = rs.getInt("total")+1;
             java.sql.Date sqlDate = localDateTimeToSQLDate(date.getDate());
