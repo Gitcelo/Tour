@@ -1,9 +1,11 @@
 package data;
 
+import Model.Reservation;
 import Model.Tour;
 import Model.TourDate;
 import javafx.collections.ObservableList;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static application.Utils.getUrlAndDatabase;
+import static application.Utils.*;
 
 public class ReservationDb {
     private Connection conn = null;
@@ -36,17 +38,14 @@ public class ReservationDb {
                 + "customerName,"
                 + "customerEmail ) VALUES ("
                 + "?,?,?,?,?,?)";
-        try{
-            conn = DriverManager.getConnection(getUrlAndDatabase()[0]);
+        try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
             conn.setAutoCommit(false);
             PreparedStatement st = conn.prepareStatement(query);
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as total FROM Reservations");
             int resId = rs.getInt("total")+1;
-            String formatted = date.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH"));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
-            java.util.Date parsedDate = sdf.parse(formatted);
-            java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+
+            java.sql.Date sqlDate = localDateTimeToSQLDate(date.getDate());
 
             //set variables
             st.setInt(1,resId);
@@ -59,11 +58,56 @@ public class ReservationDb {
             st.close();
             conn.commit();
             return resId;
-        }catch (SQLException | ParseException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
         }
         return 0;
+    }
+
+    public Reservation fetchReservationById(int reservationId) {
+        String query = "SELECT * FROM Reservations WHERE "
+                + "reservationId="
+                + reservationId;
+        try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
+            conn.setAutoCommit(false);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            Reservation reservation = new Reservation();
+            String q = "SELECT * FROM Dates WHERE "
+                    + "tourId = " + rs.getInt("tourId")
+                    + "AND tourDate = " + rs.getDate("tourDate");
+            ResultSet dateResults = stmt.executeQuery(q);
+            TourDate td = new TourDate( //date info for this reservation
+                    toLocalDateTime(dateResults.getLong("tourDate")),
+                    dateResults.getInt("availableSeats"),
+                    dateResults.getInt("maxAvailableSeats")
+            );
+            reservation = new Reservation(
+                    td,
+                    rs.getInt("reservstionId"),
+                    rs.getInt("noOfSeats"),
+                    rs.getString("customerName"),
+                    rs.getString("customerEmail")
+            );
+            return reservation;
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean removeReservation(int reservationId) {
+        String query = "DELETE FROM Reservations WHERE reservationId = ?";
+        try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
+            conn.setAutoCommit(false);
+            PreparedStatement pt = conn.prepareStatement(query);
+            pt.setInt(1,reservationId);
+            int result = pt.executeUpdate();
+            conn.commit();
+            return result > 0;
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
