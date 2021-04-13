@@ -4,6 +4,11 @@ import Model.*;
 import data.*;
 import static application.Utils.*;
 
+/**
+ * @author Team 3D
+ *
+ * Object that sanitizes parameters before sending them on to be used in reservation queries.
+ */
 public class ReservationController {
     private final ReservationDb resDb;
 
