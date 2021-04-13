@@ -11,9 +11,6 @@ public class ReservationController {
         resDb = new ReservationDb();
     }
 
-    public int getInt() {
-        return 5;
-    }
 
     /**
      * Makes a booking.
