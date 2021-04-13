@@ -13,7 +13,7 @@ public class TourDate {
     private final int maxSeats;
 
     /**
-     * Constructor.
+     * Constructor for the TourDate object.
      *
      * @param date Date of this instance of a tour.
      * @param availableSeats Number of available seats left on this instance of a tour.

@@ -1,6 +1,8 @@
 package Model;
 
 /**
+ * @author Team 3D
+ *
  * Object that contains a specific tour reservation.
  */
 public class Reservation {
