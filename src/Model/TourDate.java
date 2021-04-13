@@ -47,4 +47,8 @@ public class TourDate {
         }
         return false;
     }
+
+    public int getAvailableSeats(){ return availableSeats; }
+
+    public int getMaxSeats() { return maxSeats; }
 }

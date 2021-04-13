@@ -54,7 +54,7 @@ public class ReservationDb implements MakeConnection {
      * @param noOfSeats Number of seats to be booked
      * @param customerName Name of the customer making reservation
      * @param customerEmail Email of the customer making reservation
-     * @return True if booking successful, false otherwise
+     * @return returns reservationId if successful, 0 otherwise
      */
     public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
         validConnection(conn);

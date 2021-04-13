@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -81,4 +83,36 @@ public class Utils {
             throw new IllegalArgumentException("Invalid database connection");
         }
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Makes a connection to the database
+     *
+     * @return The connection to the database.
+     * @throws SQLException If the connection can't be made.
+     */
+    public static Connection connect() throws SQLException {
+        return DriverManager.getConnection(getUrlAndDatabase()[0]);
+    }
+
+    /**
+     * Disconnects a connection from its database.
+     *
+     * @param conn The connection to be disconnected.
+     * @return The closed connection.
+     * @throws SQLException If the connection can't be disconnected for any reason.
+     */
+    public static Connection disconnect(Connection conn) throws SQLException {
+            conn.close();
+            return conn;
+    }
+
+    public static boolean isValidEmail(String email)
+    {
+        Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
+        Matcher m = emailPattern.matcher(email);
+        return !m.matches();
+    }
+>>>>>>> 5c763cece7fe30b8e5b5d4824097e521ecda11c2
 }
