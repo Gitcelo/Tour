@@ -34,6 +34,22 @@ public class PopulateDatabase {
     }
 
     /**
+     * Checks whether the file given by the path dbName exists.
+     * @return True if file exists, false otherwise.
+     */
+    private boolean realFile() {
+        try {
+            File dbFile = new File(dbName);
+            if (dbFile.exists()) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    /**
      * @param fileName
      * @return
      * @throws IOException
@@ -61,11 +77,12 @@ public class PopulateDatabase {
     }
 
     private void makeTours() {
-        try {
+        try (Connection conn = DriverManager.getConnection(url)) {
             BufferedReader br = readFile("tours.txt");
             String line;
             while ((line = br.readLine()) != null) {
-                String[] lineArray = line.split(",");
+                String[] stringArray = line.split(",");
+                String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
                 tdb.makeTour(
                         lineArray[0],
                         Integer.parseInt(lineArray[1]),
@@ -74,12 +91,13 @@ public class PopulateDatabase {
                         Integer.parseInt(lineArray[4]),
                         Integer.parseInt(lineArray[5]),
                         Integer.parseInt(lineArray[6]),
-                        lineArray[7]
+                        lineArray[7],
+                        conn
                 );
             }
-            System.out.println("Tours populated");
+            System.out.println("--Tours populated--");
         } catch (SQLException | IOException e) {
-            System.out.println("Failed to populate Tours");
+            System.out.println("--Failed to populate Tours--");
         }
     }
 
@@ -102,23 +120,10 @@ public class PopulateDatabase {
                         conn
                 );
             }
-            System.out.println("Dates populated");
+            System.out.println("--Dates populated--");
         } catch (SQLException | IOException | ParseException e) {
-            System.out.println("Failed to populate Dates");
-            e.printStackTrace();
+            System.out.println("--Failed to populate Dates--");
         }
-    }
-
-    private boolean realFile() {
-        try {
-            File dbFile = new File(dbName);
-            if (dbFile.exists()) {
-                return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
     }
 
     public static void main(String[] args) {

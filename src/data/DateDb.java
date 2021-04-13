@@ -12,7 +12,8 @@ public class DateDb {
 
     public void makeDate(int tourId, Date tourDate, int maxAvailableSeats, int availableSeats, Connection conn) {
         try {
-            conn.getMetaData();
+            String url = conn.getMetaData().getURL();
+            if(!url.equals(getUrlAndDatabase()[0])) throw new IllegalArgumentException("Incorrect database connection");
         } catch (SQLException e) {
             throw new IllegalArgumentException("Incorrect database connection");
         }

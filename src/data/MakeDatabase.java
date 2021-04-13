@@ -2,20 +2,18 @@ package data;
 
 import java.io.*;
 import java.sql.*;
+import static application.Utils.getUrlAndDatabase;
+import static application.Utils.getSrcPath;
 
 public class MakeDatabase {
     private static void createDatabase() throws SQLException {
         Connection conn = null;
         Statement stmt;
-        String root = System.getProperty("user.dir");
-        String separator = System.getProperty("file.separator");
-        String dir = root.replace(separator, "/");
-        String dbName = dir + "/src/data/tour.db";
-        String url = "jdbc:sqlite:" + dbName;
-        System.out.println(url);
-        String schema = dir + "/src/data/schema.sql";
+        String[] strings = getUrlAndDatabase();
+        String url = strings[0];
+        String dbName = strings[1];
+        String schema = getSrcPath() + "data/schema.sql";
         StringBuffer command=null;
-
         try {
             File dbFile = new File(dbName);
             if (dbFile.exists()) {
@@ -54,6 +52,7 @@ public class MakeDatabase {
         try {
             createDatabase();
         } catch (SQLException e) {
+            System.err.println("Could not create database");
             e.printStackTrace();
         }
     }

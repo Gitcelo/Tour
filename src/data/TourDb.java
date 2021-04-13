@@ -22,8 +22,13 @@ public class TourDb {
 
     public TourDb() { url=getUrlAndDatabase()[0]; }
 
-    //Skilar true ef insert náðist, annars false
-    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName) throws SQLException {
+    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName, Connection conn) throws SQLException {
+        try {
+            String url = conn.getMetaData().getURL();
+            if(!url.equals(getUrlAndDatabase()[0])) throw new IllegalArgumentException("Incorrect database connection");
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Incorrect database connection");
+        }
         String query = "INSERT INTO Tours"
                 +"(tourName,"
                 +"price,"
@@ -35,7 +40,6 @@ public class TourDb {
                 +"providerName) "
                 +"values(?,?,?,?,?,?,?,?);";
         try {
-            conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
             ps = conn.prepareStatement(query);
@@ -51,11 +55,10 @@ public class TourDb {
             ps.close();
             conn.commit();
             rs = stmt.executeQuery("SELECT last_insert_rowid();");
+            conn.commit();
             return rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
         }
         return 0;
     }
