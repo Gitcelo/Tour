@@ -1,8 +1,9 @@
 package Controller;
 
-import java.util.Comparator;
+
 import Model.*;
 import data.*;
+import static application.Utils.*;
 
 public class ReservationController {
     private ReservationDb resDb;
@@ -15,12 +16,17 @@ public class ReservationController {
         return 5;
     }
 
+    public int confirmBooking(Tour tour, TourDate tourDate, int noOfSeats, String customerName, String customerEmail) {
+        if(!isValidEmail(customerEmail)) {
+            throw new IllegalArgumentException("Email is not valid");
+        }
+        if(customerName.equals("")) {
+            throw new IllegalArgumentException("customerName must not be empty");
+        }
 
-    public int confirmBooking(Tour tour,TourDate date, int noOfSeats, String customerName, String customerEmail) {
-
-
-        return true;
+        return resDb.makeReservation(tour, tourDate,noOfSeats,customerName,customerEmail);
     }
+
 
     
 

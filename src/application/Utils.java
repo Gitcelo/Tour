@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -104,5 +106,12 @@ public class Utils {
     public static Connection disconnect(Connection conn) throws SQLException {
             conn.close();
             return conn;
+    }
+
+    public static boolean isValidEmail(String email)
+    {
+        Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
+        Matcher m = emailPattern.matcher(email);
+        return !m.matches();
     }
 }
