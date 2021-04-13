@@ -35,7 +35,7 @@ public class TourDb implements MakeConnection {
     @Override
     public void openConnection() {
         try {
-            conn = connect();
+            conn = DriverManager.getConnection(url);
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not connect to database");
         }
@@ -48,7 +48,7 @@ public class TourDb implements MakeConnection {
     @Override
     public void closeConnection() {
         try {
-            conn = disconnect(conn);
+            conn.close();
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not disconnect from database");
         }
@@ -184,9 +184,26 @@ public class TourDb implements MakeConnection {
         }
     }
 
-    //Skilar true ef náðist að eyða, false annars
-    public boolean removeTour(/*Einhverjir parametrar*/) {
-        return true;
+    /**
+     * Removes a tour from the Tours table.
+     *
+     * @param tourId Identification number of the tour that is to be removed.
+     * @return true if tour was removed, false otherwise.
+     */
+    public boolean removeTour(int tourId) {
+        validConnection(conn);
+        String query = "DELETE FROM Reservations WHERE tourId = ?";
+        try {
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, tourId);
+            int result = ps.executeUpdate();
+            ps.close();
+            conn.commit();
+            return result > 0;
+        }catch (SQLException e){
+            return false;
+        }
     }
     
 }

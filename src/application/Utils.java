@@ -1,7 +1,6 @@
 package application;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,8 +71,7 @@ public class Utils {
     /**
      * Checks if a connection to the database is valid.
      *
-     * @param conn The connection being tested
-     * @return true if the connection is good, false otherwise.
+     * @param conn The connection being tested.
      */
     public static void validConnection(Connection conn) {
         try {
@@ -82,27 +80,5 @@ public class Utils {
         } catch (SQLException e) {
             throw new IllegalArgumentException("Invalid database connection");
         }
-    }
-
-    /**
-     * Makes a connection to the database
-     *
-     * @return The connection to the database.
-     * @throws SQLException If the connection can't be made.
-     */
-    public static Connection connect() throws SQLException {
-        return DriverManager.getConnection(getUrlAndDatabase()[0]);
-    }
-
-    /**
-     * Disconnects a connection from its database.
-     *
-     * @param conn The connection to be disconnected.
-     * @return The closed connection.
-     * @throws SQLException If the connection can't be disconnected for any reason.
-     */
-    public static Connection disconnect(Connection conn) throws SQLException {
-            conn.close();
-            return conn;
     }
 }

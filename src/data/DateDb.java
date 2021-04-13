@@ -9,7 +9,7 @@ import static application.Utils.*;
  * Object that can do queries on the Dates table.
  */
 public class DateDb implements MakeConnection {
-    private String url;
+    private final String url;
     private Connection conn;
 
     /**
@@ -26,7 +26,7 @@ public class DateDb implements MakeConnection {
     @Override
     public void openConnection() {
         try {
-            conn = connect();
+            conn = DriverManager.getConnection(url);
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not connect to database");
         }
@@ -39,7 +39,7 @@ public class DateDb implements MakeConnection {
     @Override
     public void closeConnection() {
         try {
-            conn = disconnect(conn);
+            conn.close();
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not disconnect from database");
         }
@@ -53,7 +53,7 @@ public class DateDb implements MakeConnection {
      * @param maxAvailableSeats Maximum number of available seats for this date.
      * @param availableSeats Current number of available seats for this date.
      */
-    public void makeDate(int tourId, Date tourDate, int maxAvailableSeats, int availableSeats) {
+    public boolean makeDate(int tourId, Date tourDate, int maxAvailableSeats, int availableSeats) {
         validConnection(conn);
         String query = "INSERT INTO Dates"
                 + "(tourId,"
@@ -72,8 +72,9 @@ public class DateDb implements MakeConnection {
             ps.executeUpdate();
             ps.close();
             conn.commit();
+            return true;
         } catch(SQLException e) {
-            e.printStackTrace();
+            return false;
         }
     }
 

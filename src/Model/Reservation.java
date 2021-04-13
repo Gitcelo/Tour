@@ -9,7 +9,7 @@ public class Reservation {
     private int noOfSeats;
     private String customerName;
     private String customerEmail;
-    private boolean validReservation;
+    private final boolean validReservation;
 
     /**
      * An empty Reservaton object that is not valid to be inserted into the database.

@@ -58,7 +58,7 @@ public class PopulateDatabase {
      *
      * @param fileName Name of .txt file in form of String.
      * @return BufferedReader that has read in the .tct file.
-     * @throws IOException
+     * @throws IOException If file does not exist.
      */
     private BufferedReader readFile(String fileName) throws IOException {
         String srcPath = getSrcPath();
@@ -92,11 +92,12 @@ public class PopulateDatabase {
         try {
             BufferedReader br = readFile("tours.txt");
             String line;
+            int num=-1;
             tdb.openConnection();
             while ((line = br.readLine()) != null) {
                 String[] stringArray = line.split(",");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
-                tdb.makeTour(
+                num = tdb.makeTour(
                         lineArray[0],
                         Integer.parseInt(lineArray[1]),
                         lineArray[2],
@@ -108,7 +109,9 @@ public class PopulateDatabase {
                 );
             }
             tdb.closeConnection();
-            System.out.println("--Tours populated--");
+            if(num>0) {
+                System.out.println("--Tours populated--");
+            } else System.out.println("--Failed to populate Tours--");
         } catch (IOException e) {
             System.out.println("--Failed to populate Tours--");
         }
@@ -118,10 +121,10 @@ public class PopulateDatabase {
      * Populates the Dates table in tour.db with fake data.
      */
     private void makeDates() {
-        try (Connection conn = DriverManager.getConnection(url)) {
-            conn.setAutoCommit(false);
+        try {
             BufferedReader br = readFile("dates.txt");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
+            boolean b = false;
             String line;
             ddb.openConnection();
             while ((line = br.readLine()) != null) {
@@ -129,7 +132,7 @@ public class PopulateDatabase {
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
                 java.util.Date date = sdf.parse(lineArray[1]);
                 Date sqlDate = new Date(date.getTime());
-                ddb.makeDate(
+                b = ddb.makeDate(
                         Integer.parseInt(lineArray[0]),
                         sqlDate,
                         Integer.parseInt(lineArray[2]),
@@ -137,8 +140,11 @@ public class PopulateDatabase {
                 );
             }
             ddb.closeConnection();
-            System.out.println("--Dates populated--");
-        } catch (SQLException | IOException | ParseException e) {
+            if(b) {
+                System.out.println("--Dates populated--");
+            }
+            else System.out.println("--Failed to populate Dates--");
+        } catch (IOException | ParseException e) {
             System.out.println("--Failed to populate Dates--");
         }
     }

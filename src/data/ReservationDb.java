@@ -27,7 +27,7 @@ public class ReservationDb implements MakeConnection {
     @Override
     public void openConnection() {
         try {
-            conn = connect();
+            conn = DriverManager.getConnection(url);
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not connect to database");
         }
@@ -40,7 +40,7 @@ public class ReservationDb implements MakeConnection {
     @Override
     public void closeConnection() {
         try {
-            conn = disconnect(conn);
+            conn.close();
         } catch(SQLException e) {
             throw new IllegalArgumentException("Could not disconnect from database");
         }
@@ -132,7 +132,7 @@ public class ReservationDb implements MakeConnection {
      * Cancels a reservation.
      *
      * @param reservationId Identification number of the reservation that is being cancelled.
-     * @return True if able to cancel reservation, false otherwise.
+     * @return true if reservation was cancelled, false otherwise.
      */
     public boolean removeReservation(int reservationId) {
         validConnection(conn);
@@ -140,7 +140,7 @@ public class ReservationDb implements MakeConnection {
         try {
             conn.setAutoCommit(false);
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1,reservationId);
+            ps.setInt(1, reservationId);
             int result = ps.executeUpdate();
             ps.close();
             conn.commit();

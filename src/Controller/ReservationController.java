@@ -19,7 +19,7 @@ public class ReservationController {
     public int confirmBooking(Tour tour,TourDate date, int noOfSeats, String customerName, String customerEmail) {
 
 
-        return true;
+        return 0;
     }
 
     

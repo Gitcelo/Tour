@@ -2,7 +2,7 @@ package data;
 
 public interface MakeConnection {
 
-    public void openConnection();
+    void openConnection();
 
-    public void closeConnection();
+    void closeConnection();
 }
