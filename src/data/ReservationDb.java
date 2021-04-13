@@ -72,24 +72,26 @@ public class ReservationDb implements MakeConnection {
         try {
             conn.setAutoCommit(false);
             //update Dates
-            PreparedStatement pstDate = conn.prepareStatement(queryDate);
-            pstDate.setInt(1,date.getAvailableSeats() - noOfSeats);
-            pstDate.setInt(2,tour.getTourId());
-            pstDate.setDate(3,localDateTimeToSQLDate(date.getDate()));
-            pstDate.executeUpdate();
+            PreparedStatement pstDates = conn.prepareStatement(queryDate);
+            pstDates.setInt(1,date.getAvailableSeats() - noOfSeats);
+            pstDates.setInt(2,tour.getTourId());
+            pstDates.setDate(3,localDateTimeToSQLDate(date.getDate()));
+            pstDates.executeUpdate();
+            pstDates.close();
             //Insert into reservation
-            PreparedStatement st = conn.prepareStatement(queryReservations);
+            PreparedStatement pstReservation = conn.prepareStatement(queryReservations);
             ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as total FROM Reservations");
             int resId = rs.getInt("total")+1;
             java.sql.Date sqlDate = localDateTimeToSQLDate(date.getDate());
-            st.setInt(1,resId);
-            st.setInt(2, tour.getTourId());
-            st.setDate(3, sqlDate);
-            st.setInt(4, noOfSeats);
-            st.setString(5,customerName);
-            st.setString(6, customerEmail);
-            st.executeUpdate();
-            st.close();
+            pstReservation.setInt(1,resId);
+            pstReservation.setInt(2, tour.getTourId());
+            pstReservation.setDate(3, sqlDate);
+            pstReservation.setInt(4, noOfSeats);
+            pstReservation.setString(5,customerName);
+            pstReservation.setString(6, customerEmail);
+            pstReservation.addBatch();
+            pstReservation.executeBatch();
+            pstReservation.close();
             conn.commit();
             return resId;
         }catch (SQLException e) {
@@ -146,13 +148,25 @@ public class ReservationDb implements MakeConnection {
      */
     public boolean removeReservation(int reservationId) {
         validConnection(conn);
-        String query = "DELETE FROM Reservations WHERE reservationId = ?";
+        String deleteReservationQuery = "DELETE FROM Reservations WHERE reservationId = ?";
+        String selectReservationQquery = "SELECT * FROM Reservations WHERE reservationId = ?";
+        String updateDatesQuery = "UPDATE Dates SET availableSeats = availableSeats + ? "
+                + "WHERE tourId = ? AND tourDate = ?";
         try {
             conn.setAutoCommit(false);
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, reservationId);
-            int result = ps.executeUpdate();
-            ps.close();
+            //Update Dates
+            ResultSet rs = conn.createStatement().executeQuery(selectReservationQquery);//saekja reservation row
+            PreparedStatement psDates = conn.prepareStatement(updateDatesQuery);
+            psDates.setInt(1,reservationId);
+            psDates.setInt(2,rs.getInt("tourId"));
+            psDates.setDate(3,rs.getDate("tourDate"));
+            psDates.executeUpdate();
+            psDates.close();
+            //delete reservation
+            PreparedStatement psReservation = conn.prepareStatement(deleteReservationQuery);
+            psReservation.setInt(1, reservationId);
+            int result = psDates.executeUpdate();
+            psReservation.close();
             conn.commit();
             return result > 0;
         }catch (SQLException e){
