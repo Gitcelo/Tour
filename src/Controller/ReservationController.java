@@ -2,23 +2,26 @@ package Controller;
 
 import java.util.Comparator;
 import Model.*;
+import data.*;
 
 public class ReservationController {
-   // private ReservationDb resDb;
+    private ReservationDb resDb;
 
-   /* public ReservationController(ReservationDb resDb) {
-        this.resDb = resDb;
-    }*/
+    public ReservationController() {
+        this.resDb = new ReservationDb();
+    }
 
     public int getInt() {
         return 5;
     }
 
-    public boolean makeReservation(TourDate date, int noOfSeats) {
 
-        Comparator<ReservationController> comparator = Comparator.comparingInt(ReservationController::getInt);
+    public int confirmBooking(Tour tour,TourDate date, int noOfSeats, String customerName, String customerEmail) {
+
+
         return true;
     }
+
     
 
 
