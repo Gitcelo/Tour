@@ -7,7 +7,8 @@
 
 ## Packages
 * **vidmot**: Contains a simple search UI
-* **vinnsla**: Contains the programs for the user
+* **Controller**: Contains the programs responsible for handling requests from users
+* **Model**: Contains programs that represent the application
 * **data**: Contains the database and programs that set up and do calls on the database
 
 ## Database setup
