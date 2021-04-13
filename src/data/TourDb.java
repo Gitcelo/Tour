@@ -142,7 +142,7 @@ public class TourDb implements MakeConnection {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
             Tour currentTour = new Tour();
-            ArrayList<TourDate> currentTourDates = new ArrayList<>();
+            ObservableList<TourDate> currentTourDates = FXCollections.observableArrayList();
             int currentId = 0;
             while(rs.next()) {
                 int id = rs.getInt("tourId");
@@ -163,7 +163,7 @@ public class TourDb implements MakeConnection {
                             rs.getInt("location"),
                             rs.getString("providerName")
                     );
-                    currentTourDates = new ArrayList<>();
+                    currentTourDates = FXCollections.observableArrayList();
                 }
                 LocalDateTime ldt = toLocalDateTime(rs.getLong("tourDate"));
                 TourDate td = new TourDate(

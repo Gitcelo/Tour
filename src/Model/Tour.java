@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +11,7 @@ import java.util.ArrayList;
  * Object that represents a day tour.
  */
 public class Tour {
-    private ArrayList<TourDate> dates;
+    private ObservableList<TourDate> dates;
     private int tourId;
     private String tourName;
     private String description;
@@ -62,7 +65,7 @@ public class Tour {
             throw new IllegalArgumentException("providerName is not valid");
         }
 
-        dates = new ArrayList<TourDate>();
+        dates = FXCollections.observableArrayList();
         this.tourId = tourId;
         this.tourName = tourName;
         this.description = description;
@@ -75,7 +78,7 @@ public class Tour {
         validTour = true;
     }
 
-    public ArrayList<TourDate> getDates(){ return dates; }
+    public ObservableList<TourDate> getDates(){ return dates; }
 
     public int getTourId() {return tourId;}
 
@@ -100,5 +103,5 @@ public class Tour {
 
     public boolean getValidTour() { return validTour; }
 
-    public void setDates(ArrayList<TourDate> dates) {this.dates = dates;}
+    public void setDates(ObservableList<TourDate> dates) {this.dates = dates;}
 }
