@@ -58,8 +58,8 @@ public class DateDb implements MakeConnection {
         String query = "INSERT INTO Dates"
                 + "(tourId,"
                 + "tourDate,"
-                + "availableSeats,"
-                + "maxAvailableSeats) "
+                + "maxAvailableSeats,"
+                + "availableSeats) "
                 + "values(?,?,?,?);";
         PreparedStatement ps;
         try {
