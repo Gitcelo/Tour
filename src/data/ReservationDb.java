@@ -7,6 +7,8 @@ import java.sql.*;
 import static application.Utils.*;
 
 /**
+ * @author Team 3D
+ *
  * Object that can do queries on the Reservations table.
  */
 public class ReservationDb {

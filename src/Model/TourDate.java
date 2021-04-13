@@ -2,11 +2,23 @@ package Model;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author Team 3D
+ *
+ * An object that represents an instance of a tour for a specific date.
+ */
 public class TourDate {
     private LocalDateTime date;
     private int availableSeats;
-    private int maxSeats;
+    private final int maxSeats;
 
+    /**
+     * Constructor.
+     *
+     * @param date Date of this instance of a tour.
+     * @param availableSeats Number of available seats left on this instance of a tour.
+     * @param maxSeats Number of maximum availavle seats for this instance of a tour.
+     */
     public TourDate(LocalDateTime date, int availableSeats, int maxSeats) {
         if(maxSeats <= 0 || (availableSeats < 0 || availableSeats > maxSeats)) {
             throw new IllegalArgumentException("maxSeats is negative or available seats is not in [0,maxSeats]");
@@ -19,13 +31,12 @@ public class TourDate {
         this.maxSeats = maxSeats;
     }
 
-    public LocalDateTime getDate() {
-        return date;
-    }
+    public LocalDateTime getDate() { return date; }
 
     /**
-     * 
-     * @param seatCount positive number if booking is made, negative if booking is cancelled.
+     * Updates the amount of available seats on this instance of a tour.
+     *
+     * @param seatCount Negative number if booking is made, positive if booking is cancelled.
      * @return true if updating seat was valid, false otherwise
      */
     public boolean updateSeat(int seatCount) {
@@ -36,8 +47,4 @@ public class TourDate {
         }
         return false;
     }
-
-    //public Consumer getNextCustomerInLine(){} ef við útfærum
-
-    
 }

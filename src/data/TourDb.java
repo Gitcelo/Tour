@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import static application.Utils.*;
 
 /**
+ * @author Team 3D
+ *
  * Object that can do queries on the Tours table.
  */
 public class TourDb {

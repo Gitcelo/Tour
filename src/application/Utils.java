@@ -49,6 +49,12 @@ public class Utils {
         return new Date(date).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
+    /**
+     * Converts an object of type LocalDateTime to an object of type java.sql.Date.
+     *
+     * @param date Object to be converted.
+     * @return Converted object.
+     */
     public static java.sql.Date localDateTimeToSQLDate(LocalDateTime date) {
         java.sql.Date sqlDate;
         try{
@@ -63,6 +69,12 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Checks if a connection to the database is valid.
+     *
+     * @param conn The connection being tested
+     * @return true if the connection is good, false otherwise.
+     */
     public static boolean validConnection(Connection conn) {
         try {
             String url = conn.getMetaData().getURL();

@@ -2,6 +2,11 @@ package Model;
 
 import java.util.ArrayList;
 
+/**
+ * @author Team 3D
+ *
+ * Object that represents a day tour.
+ */
 public class Tour {
     private ArrayList<TourDate> dates;
     private int tourId;
@@ -70,9 +75,7 @@ public class Tour {
         validTour = true;
     }
 
-    public ArrayList<TourDate> getDates(){
-        return dates;
-    }
+    public ArrayList<TourDate> getDates(){ return dates; }
 
     public int getTourId() {return tourId;}
 
