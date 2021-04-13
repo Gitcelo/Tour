@@ -17,6 +17,7 @@ import static application.Utils.*;
  * Object that can do queries on the Tours table.
  */
 public class TourDb {
+    Connection conn;
     Statement stmt;
     PreparedStatement ps;
     ResultSet rs;
@@ -26,6 +27,28 @@ public class TourDb {
      * Constructor that initializes the instance variable url.
      */
     public TourDb() { url=getUrlAndDatabase()[0]; }
+
+    /**
+     * Opens up a connection to the database.
+     */
+    public void openConnection() {
+        try {
+            conn = connect();
+        } catch(SQLException e) {
+            throw new IllegalArgumentException("Could not connect to database");
+        }
+    }
+
+    /**
+     * Closes a connection to the database.
+     */
+    public void closeConnection() {
+        try {
+            conn = disconnect(conn);
+        } catch(SQLException e) {
+            throw new IllegalArgumentException("Could not disconnect from database");
+        }
+    }
 
     /**
      * Inserts tour into the Tours table.
@@ -38,12 +61,11 @@ public class TourDb {
      * @param childFriendly True if the tour is child friendly, false otherwise.
      * @param season Number that represents the season the tour takes place in (between 1 and 4 inclusive).
      * @param providerName Name of the provider of the tour.
-     * @param conn The connection to the database
      * @return Identification number of the new tour if the function managed to insert it, 0 otherwise.
      */
-    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName, Connection conn) {
+    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName) {
         if(!validConnection(conn)) {
-            throw new IllegalArgumentException("Incorrect database connection");
+            throw new IllegalArgumentException("Invalid database connection");
         }
         String query = "INSERT INTO Tours"
                 +"(tourName,"
@@ -71,8 +93,6 @@ public class TourDb {
             ps.close();
             conn.commit();
             rs = stmt.executeQuery("SELECT last_insert_rowid();");
-            stmt.close();
-            rs.close();
             return rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();

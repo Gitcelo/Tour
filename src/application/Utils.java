@@ -1,6 +1,7 @@
 package application;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,8 +36,7 @@ public class Utils {
         String srcPath = getSrcPath();
         String dbName = srcPath + "data/tour.db";
         String url = "jdbc:sqlite:" + dbName;
-        String[] s = {url, dbName};
-        return s;
+        return new String[]{url, dbName};
     }
 
     /**
@@ -82,5 +82,14 @@ public class Utils {
         } catch (SQLException e) {
             return false;
         }
+    }
+
+    public static Connection connect() throws SQLException {
+        return DriverManager.getConnection(getUrlAndDatabase()[0]);
+    }
+
+    public static Connection disconnect(Connection conn) throws SQLException {
+            conn.close();
+            return conn;
     }
 }

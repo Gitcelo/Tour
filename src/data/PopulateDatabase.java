@@ -89,9 +89,10 @@ public class PopulateDatabase {
      * Populates the Tours table in tour.db with fake data.
      */
     private void makeTours() {
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try {
             BufferedReader br = readFile("tours.txt");
             String line;
+            tdb.openConnection();
             while ((line = br.readLine()) != null) {
                 String[] stringArray = line.split(",");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
@@ -103,12 +104,12 @@ public class PopulateDatabase {
                         Integer.parseInt(lineArray[4]),
                         Integer.parseInt(lineArray[5]),
                         Integer.parseInt(lineArray[6]),
-                        lineArray[7],
-                        conn
+                        lineArray[7]
                 );
             }
+            tdb.closeConnection();
             System.out.println("--Tours populated--");
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             System.out.println("--Failed to populate Tours--");
         }
     }
@@ -122,6 +123,7 @@ public class PopulateDatabase {
             BufferedReader br = readFile("dates.txt");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             String line;
+            ddb.openConnection();
             while ((line = br.readLine()) != null) {
                 String[] stringArray = line.split(",");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
@@ -131,10 +133,10 @@ public class PopulateDatabase {
                         Integer.parseInt(lineArray[0]),
                         sqlDate,
                         Integer.parseInt(lineArray[2]),
-                        Integer.parseInt(lineArray[3]),
-                        conn
+                        Integer.parseInt(lineArray[3])
                 );
             }
+            ddb.closeConnection();
             System.out.println("--Dates populated--");
         } catch (SQLException | IOException | ParseException e) {
             System.out.println("--Failed to populate Dates--");

@@ -13,11 +13,34 @@ import static application.Utils.*;
  */
 public class ReservationDb {
     private final String url;
+    private Connection conn;
 
     /**
      * Constructor that initializes the instance variable url.
      */
     public ReservationDb(){ url = getUrlAndDatabase()[0]; }
+
+    /**
+     * Opens up a connection to the database.
+     */
+    public void openConnection() {
+        try {
+            conn = connect();
+        } catch(SQLException e) {
+            throw new IllegalArgumentException("Could not connect to database");
+        }
+    }
+
+    /**
+     * Closes a connection to the database.
+     */
+    public void closeConnection() {
+        try {
+            conn = disconnect(conn);
+        } catch(SQLException e) {
+            throw new IllegalArgumentException("Could not disconnect from database");
+        }
+    }
 
     /**
      * Bookins a reservation.
@@ -27,12 +50,11 @@ public class ReservationDb {
      * @param noOfSeats Number of seats to be booked
      * @param customerName Name of the customer making reservation
      * @param customerEmail Email of the customer making reservation
-     * @param conn The connection to the database
      * @return True if booking successful, false otherwise
      */
-    public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail, Connection conn) {
+    public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
         if(!validConnection(conn)) {
-            throw new IllegalArgumentException("Incorrect database connection");
+            throw new IllegalArgumentException("Invalid database connection");
         }
         String query = "INSERT INTO Reservations ("
                 + "reservationId,"
