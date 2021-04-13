@@ -11,7 +11,7 @@ import static application.Utils.*;
  *
  * Object that can do queries on the Reservations table.
  */
-public class ReservationDb {
+public class ReservationDb implements MakeConnection {
     private final String url;
     private Connection conn;
 
@@ -22,7 +22,9 @@ public class ReservationDb {
 
     /**
      * Opens up a connection to the database.
+     * Should be called at least once before using the other methods.
      */
+    @Override
     public void openConnection() {
         try {
             conn = connect();
@@ -33,7 +35,9 @@ public class ReservationDb {
 
     /**
      * Closes a connection to the database.
+     * Should be called when there is no need to query the database any more.
      */
+    @Override
     public void closeConnection() {
         try {
             conn = disconnect(conn);
@@ -53,9 +57,7 @@ public class ReservationDb {
      * @return True if booking successful, false otherwise
      */
     public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail) {
-        if(!validConnection(conn)) {
-            throw new IllegalArgumentException("Invalid database connection");
-        }
+        validConnection(conn);
         String query = "INSERT INTO Reservations ("
                 + "reservationId,"
                 + "tourId,"
@@ -92,10 +94,11 @@ public class ReservationDb {
      * @return The reservation if it exists, otherwise an empty and invalid Reservation object.
      */
     public Reservation fetchReservationById(int reservationId) {
+        validConnection(conn);
         String query = "SELECT * FROM Reservations WHERE "
                 + "reservationId="
                 + reservationId;
-        try (Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
+        try {
             conn.setAutoCommit(false);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -132,8 +135,9 @@ public class ReservationDb {
      * @return True if able to cancel reservation, false otherwise.
      */
     public boolean removeReservation(int reservationId) {
+        validConnection(conn);
         String query = "DELETE FROM Reservations WHERE reservationId = ?";
-        try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
+        try {
             conn.setAutoCommit(false);
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1,reservationId);

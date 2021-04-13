@@ -75,19 +75,32 @@ public class Utils {
      * @param conn The connection being tested
      * @return true if the connection is good, false otherwise.
      */
-    public static boolean validConnection(Connection conn) {
+    public static void validConnection(Connection conn) {
         try {
             String url = conn.getMetaData().getURL();
-            return url.equals(getUrlAndDatabase()[0]);
+            if(!url.equals(getUrlAndDatabase()[0])) throw new IllegalArgumentException("Invalid database connection");
         } catch (SQLException e) {
-            return false;
+            throw new IllegalArgumentException("Invalid database connection");
         }
     }
 
+    /**
+     * Makes a connection to the database
+     *
+     * @return The connection to the database.
+     * @throws SQLException If the connection can't be made.
+     */
     public static Connection connect() throws SQLException {
         return DriverManager.getConnection(getUrlAndDatabase()[0]);
     }
 
+    /**
+     * Disconnects a connection from its database.
+     *
+     * @param conn The connection to be disconnected.
+     * @return The closed connection.
+     * @throws SQLException If the connection can't be disconnected for any reason.
+     */
     public static Connection disconnect(Connection conn) throws SQLException {
             conn.close();
             return conn;

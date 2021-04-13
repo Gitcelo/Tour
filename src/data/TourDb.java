@@ -16,7 +16,7 @@ import static application.Utils.*;
  *
  * Object that can do queries on the Tours table.
  */
-public class TourDb {
+public class TourDb implements MakeConnection {
     Connection conn;
     Statement stmt;
     PreparedStatement ps;
@@ -30,7 +30,9 @@ public class TourDb {
 
     /**
      * Opens up a connection to the database.
+     * Should be called at least once before using the other methods.
      */
+    @Override
     public void openConnection() {
         try {
             conn = connect();
@@ -41,7 +43,9 @@ public class TourDb {
 
     /**
      * Closes a connection to the database.
+     * Should be called when there is no need to query the database any more.
      */
+    @Override
     public void closeConnection() {
         try {
             conn = disconnect(conn);
@@ -64,9 +68,7 @@ public class TourDb {
      * @return Identification number of the new tour if the function managed to insert it, 0 otherwise.
      */
     public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName) {
-        if(!validConnection(conn)) {
-            throw new IllegalArgumentException("Invalid database connection");
-        }
+        validConnection(conn);
         String query = "INSERT INTO Tours"
                 +"(tourName,"
                 +"price,"
@@ -95,7 +97,6 @@ public class TourDb {
             rs = stmt.executeQuery("SELECT last_insert_rowid();");
             return rs.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
             return 0;
         }
     }
@@ -112,6 +113,7 @@ public class TourDb {
      * @return An ObservableList of Tour objects if query worked, otherwise the ObservableList is empty.
      */
     public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) {
+        validConnection(conn);
         ObservableList<Tour> t = FXCollections.observableArrayList();
         LocalDateTime startDate = dateRange[0].atStartOfDay();
         LocalDateTime endDate = dateRange[1].atStartOfDay();
@@ -135,7 +137,7 @@ public class TourDb {
                 +" AND "
                 +endDateMilli
                 +" ORDER BY Tours.tourId;";
-        try (Connection conn = DriverManager.getConnection(url)){
+        try {
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);

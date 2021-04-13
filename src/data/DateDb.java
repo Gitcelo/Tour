@@ -8,7 +8,7 @@ import static application.Utils.*;
  *
  * Object that can do queries on the Dates table.
  */
-public class DateDb {
+public class DateDb implements MakeConnection {
     private String url;
     private Connection conn;
 
@@ -21,7 +21,9 @@ public class DateDb {
 
     /**
      * Opens up a connection to the database.
+     * Should be called at least once before using the other methods.
      */
+    @Override
     public void openConnection() {
         try {
             conn = connect();
@@ -32,7 +34,9 @@ public class DateDb {
 
     /**
      * Closes a connection to the database.
+     * Should be called when there is no need to query the database any more.
      */
+    @Override
     public void closeConnection() {
         try {
             conn = disconnect(conn);
@@ -50,9 +54,7 @@ public class DateDb {
      * @param availableSeats Current number of available seats for this date.
      */
     public void makeDate(int tourId, Date tourDate, int maxAvailableSeats, int availableSeats) {
-        if(!validConnection(conn)) {
-            throw new IllegalArgumentException("Incorrect database connection");
-        }
+        validConnection(conn);
         String query = "INSERT INTO Dates"
                 + "(tourId,"
                 + "tourDate,"
