@@ -5,15 +5,15 @@ import java.sql.*;
 
 public class MakeDatabase {
     private static void createDatabase() throws SQLException {
-        InputStream scriptStream = null;
         Connection conn = null;
-        Statement stmt = null;
+        Statement stmt;
         String root = System.getProperty("user.dir");
         String separator = System.getProperty("file.separator");
         String dir = root.replace(separator, "/");
-        String dbName = dir + "/data/tour.db";
+        String dbName = dir + "/src/data/tour.db";
         String url = "jdbc:sqlite:" + dbName;
-        String schema = dir + "/data/schema.sql";
+        System.out.println(url);
+        String schema = dir + "/src/data/schema.sql";
         StringBuffer command=null;
 
         try {
@@ -43,9 +43,7 @@ public class MakeDatabase {
                 conn.commit();
             }
 
-        } catch(SQLException | FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch(SQLException | IOException e) {
             e.printStackTrace();
         } finally {
             if(conn!=null) conn.close();

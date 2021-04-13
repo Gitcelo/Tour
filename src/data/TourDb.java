@@ -47,7 +47,8 @@ public class TourDb {
             ps.setInt(6, childFriendly);
             ps.setInt(7, season);
             ps.setString(8, providerName);
-            ps.execute();
+            ps.executeUpdate();
+            ps.close();
             conn.commit();
             rs = stmt.executeQuery("SELECT last_insert_rowid();");
             return rs.getInt(1);
@@ -90,7 +91,7 @@ public class TourDb {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
             Tour currentTour = new Tour();
-            ArrayList<TourDate> currentTourDates = new ArrayList<TourDate>();
+            ArrayList<TourDate> currentTourDates = new ArrayList<>();
             int currentId = 0;
             while(rs.next()) {
                 int id = rs.getInt("tourId");
@@ -111,7 +112,7 @@ public class TourDb {
                             rs.getInt("location"),
                             rs.getString("providerName")
                     );
-                    currentTourDates = new ArrayList<TourDate>();
+                    currentTourDates = new ArrayList<>();
                 }
                 LocalDateTime ldt = toLocalDateTime(rs.getLong("tourDate"));
                 TourDate td = new TourDate(

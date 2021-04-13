@@ -1,8 +1,5 @@
 package data;
 
-import Model.Tour;
-import Model.TourDate;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -13,34 +10,44 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import static application.Utils.*;
 
+/**
+ * @author Team 3D
+ *
+ * Program that inserts fake data into the tables Tours and Dates in tour.db.
+ * Before running this program it is recommended to run MakeDatabase.java.
+ */
 public class PopulateDatabase {
 
-    private TourDb tdb;
-    private ReservationDb rdb;
-    private Connection conn;
-    private Statement stmt;
-    private String url;
-    private String dbName;
+    private final TourDb tdb;
+    private final DateDb ddb;
+    private final String url;
+    private final String dbName;
 
     private PopulateDatabase() {
         tdb = new TourDb();
-        rdb = new ReservationDb();
-        String[] strings = application.Utils.getUrlAndDatabase();
+        ddb = new DateDb();
+        String[] strings = getUrlAndDatabase();
         url = strings[0];
         dbName = strings[1];
     }
 
+    /**
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
     private BufferedReader readFile(String fileName) throws IOException {
-        fileName = "D:/Documents/Tour/src/fakeData/" + fileName;
+        String srcPath = getSrcPath();
+        fileName = srcPath + "fakeData/" + fileName;
         Path path = Paths.get(fileName);
-        BufferedReader br = Files.newBufferedReader(path);
-        return br;
+        return Files.newBufferedReader(path);
     }
 
-    private void clearTables() throws SQLException {
-        try {
-            conn = DriverManager.getConnection(url);
+    private void clearTables() {
+        Statement stmt;
+        try (Connection conn = DriverManager.getConnection(url)) {
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
             stmt.addBatch("DELETE FROM TOURS");
@@ -50,16 +57,14 @@ public class PopulateDatabase {
             conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
         }
     }
 
-    private void makeTours() throws SQLException {
+    private void makeTours() {
         try {
             BufferedReader br = readFile("tours.txt");
             String line;
-            while((line=br.readLine())!=null) {
+            while ((line = br.readLine()) != null) {
                 String[] lineArray = line.split(",");
                 tdb.makeTour(
                         lineArray[0],
@@ -75,49 +80,32 @@ public class PopulateDatabase {
             System.out.println("Tours populated");
         } catch (SQLException | IOException e) {
             System.out.println("Failed to populate Tours");
-            e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
         }
     }
 
-    private void makeDates() throws SQLException {
-        String query = "INSERT INTO Dates"
-                +"(tourId,"
-                +"tourDate,"
-                +"availableSeats,"
-                +"maxAvailableSeats)"
-                +"values(?,?,?,?);";
-        Connection conn = null;
-        Statement stmt;
-        PreparedStatement ps;
-        try {
-            conn = DriverManager.getConnection(url);
+    private void makeDates() {
+        try (Connection conn = DriverManager.getConnection(url)) {
             conn.setAutoCommit(false);
-            stmt = conn.createStatement();
-            ps = conn.prepareStatement(query);
             BufferedReader br = readFile("dates.txt");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             String line;
-            while((line=br.readLine())!=null) {
+            while ((line = br.readLine()) != null) {
                 String[] stringArray = line.split(",");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
-                ps.setInt(1, Integer.parseInt(lineArray[0]));
                 java.util.Date date = sdf.parse(lineArray[1]);
-                java.sql.Date sqlDate = new Date(date.getTime());
-                ps.setDate(2, sqlDate);
-                ps.setInt(3, Integer.parseInt(lineArray[2]));
-                ps.setInt(4, Integer.parseInt(lineArray[3]));
-                ps.addBatch();
+                Date sqlDate = new Date(date.getTime());
+                ddb.makeDate(
+                        Integer.parseInt(lineArray[0]),
+                        sqlDate,
+                        Integer.parseInt(lineArray[2]),
+                        Integer.parseInt(lineArray[3]),
+                        conn
+                );
             }
-            ps.executeBatch();
-            conn.commit();
             System.out.println("Dates populated");
         } catch (SQLException | IOException | ParseException e) {
             System.out.println("Failed to populate Dates");
             e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
         }
     }
 
@@ -135,14 +123,10 @@ public class PopulateDatabase {
 
     public static void main(String[] args) {
         PopulateDatabase pd = new PopulateDatabase();
-        if(pd.realFile()) {
-            try {
-                pd.clearTables();
-                pd.makeTours();
-                pd.makeDates();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        if (pd.realFile()) {
+            pd.clearTables();
+            pd.makeTours();
+            pd.makeDates();
+        } else System.err.println("Database missing");
     }
 }
