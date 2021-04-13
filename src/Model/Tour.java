@@ -1,8 +1,6 @@
 package Model;
 
 import java.util.ArrayList;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 public class Tour {
     private ArrayList<TourDate> dates;
@@ -15,11 +13,12 @@ public class Tour {
     private int childFriendly;
     private int season;
     private String providerName;
+    private final boolean validTour;
 
     /**
-     * Constructor for empty Tour object
+     * Constructor for empty Tour object that is not valid for insertion into the Tours table.
      */
-    public Tour() {}
+    public Tour() { validTour = false; }
 
     /** Constructor for a Tour object
      * @param tourId Id of tour object
@@ -68,6 +67,7 @@ public class Tour {
         this.childFriendly = childFriendly;
         this.season = season;
         this.providerName = providerName;
+        validTour = true;
     }
 
     public ArrayList<TourDate> getDates(){
@@ -78,36 +78,24 @@ public class Tour {
 
     public String getTourName(){ return tourName; }
 
-    public String getDescription(){
-        return description;
-    }
+    public String getDescription(){ return description; }
 
-    public int getPrice(){
-        return price;
-    }
+    public int getPrice(){ return price; }
 
-    public int getDifficulty(){
-        return difficulty;
-    }
+    public int getDifficulty(){ return difficulty; }
 
-    public String getProvider(){
-        return providerName;
-    }
+    public String getProvider(){ return providerName; }
     
-    public int getLocation(){
-        return location;
-    }
+    public int getLocation(){ return location; }
 
     public boolean isChildFriendly(){
         if(childFriendly==1) return true;
         return false;
     }
 
-    public int getSeason(){
-        return season;
-    }
+    public int getSeason(){ return season; }
+
+    public boolean getValidTour() { return validTour; }
 
     public void setDates(ArrayList<TourDate> dates) {this.dates = dates;}
-
-
 }

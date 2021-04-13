@@ -1,2 +1,2 @@
-Gullni hringurinn,10000,,10,     1,1,4,Icelandair
+Gullni hringurinn,10000,,10,1,1,4,Icelandair
 Into the Glacier,20,Inní jökul,10,1,0,1,Blue Lagoon

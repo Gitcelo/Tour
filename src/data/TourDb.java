@@ -9,24 +9,38 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import static application.Utils.*;
 
-import static application.Utils.getUrlAndDatabase;
-import static application.Utils.toLocalDateTime;
-
+/**
+ * Object that can do queries on the Tours table.
+ */
 public class TourDb {
-    Connection conn = null;
     Statement stmt;
     PreparedStatement ps;
     ResultSet rs;
     String url;
 
+    /**
+     * Constructor that initializes the instance variable url.
+     */
     public TourDb() { url=getUrlAndDatabase()[0]; }
 
-    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName, Connection conn) throws SQLException {
-        try {
-            String url = conn.getMetaData().getURL();
-            if(!url.equals(getUrlAndDatabase()[0])) throw new IllegalArgumentException("Incorrect database connection");
-        } catch (SQLException e) {
+    /**
+     * Inserts tour into the Tours table.
+     *
+     * @param tourName Name of the tour.
+     * @param price Price of the tour.
+     * @param description Description of the tour.
+     * @param difficulty Number that represents the difficulty of the tour (between 10 and 13 inclusive).
+     * @param location Location of the tour.
+     * @param childFriendly True if the tour is child friendly, false otherwise.
+     * @param season Number that represents the season the tour takes place in (between 1 and 4 inclusive).
+     * @param providerName Name of the provider of the tour.
+     * @param conn The connection to the database
+     * @return Identification number of the new tour if the function managed to insert it, 0 otherwise.
+     */
+    public int makeTour(String tourName, int price, String description, int difficulty, int location, int childFriendly, int season, String providerName, Connection conn) {
+        if(!validConnection(conn)) {
             throw new IllegalArgumentException("Incorrect database connection");
         }
         String query = "INSERT INTO Tours"
@@ -55,16 +69,27 @@ public class TourDb {
             ps.close();
             conn.commit();
             rs = stmt.executeQuery("SELECT last_insert_rowid();");
-            conn.commit();
+            stmt.close();
+            rs.close();
             return rs.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
+            return 0;
         }
-        return 0;
     }
 
-    //sækja tours útfrá þessum parametrum
-    public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) throws SQLException {
+    /**
+     * Fetches from tours and dates based on the parameters.
+     * Ideally there would be parameters such as season and childFriendly but that is inconvenient for the cluster.
+     *
+     * @param difficulty Number representing the difficulty of the tour (between 10 and 13 inclusive).
+     * @param priceRange Array of size two. The first number is the minimum price needed and the second one is the maximum number needed.
+     * @param groupSize Number that represents the minimum amount of available seats needed on the tour.
+     * @param location Number that represents the location of the tour.
+     * @param dateRange Array of size two that contains two dates the tour needs to take place between.
+     * @return An ObservableList of Tour objects if query worked, otherwise the ObservableList is empty.
+     */
+    public ObservableList<Tour> fetchTours(int difficulty, int[] priceRange, int groupSize, int location, LocalDate[] dateRange) {
         ObservableList<Tour> t = FXCollections.observableArrayList();
         LocalDateTime startDate = dateRange[0].atStartOfDay();
         LocalDateTime endDate = dateRange[1].atStartOfDay();
@@ -88,8 +113,7 @@ public class TourDb {
                 +" AND "
                 +endDateMilli
                 +" ORDER BY Tours.tourId;";
-        try {
-            conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(url)){
             conn.setAutoCommit(false);
             stmt = conn.createStatement();
             rs = stmt.executeQuery(query);
@@ -125,14 +149,15 @@ public class TourDb {
                 );
                 currentTourDates.add(td);
             }
+            stmt.close();
+            rs.close();
             currentTour.setDates(currentTourDates);
             t.add(currentTour);
+            return t;
         } catch(SQLException e) {
             e.printStackTrace();
-        } finally {
-            if(conn!=null) conn.close();
+            return t;
         }
-        return t;
     }
 
     //Skilar true ef náðist að eyða, false annars

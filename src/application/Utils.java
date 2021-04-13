@@ -1,5 +1,7 @@
 package application;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -59,5 +61,14 @@ public class Utils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean validConnection(Connection conn) {
+        try {
+            String url = conn.getMetaData().getURL();
+            return url.equals(getUrlAndDatabase()[0]);
+        } catch (SQLException e) {
+            return false;
+        }
     }
 }

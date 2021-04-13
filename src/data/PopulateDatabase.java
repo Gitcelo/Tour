@@ -16,6 +16,7 @@ import static application.Utils.*;
  * @author Team 3D
  *
  * Program that inserts fake data into the tables Tours and Dates in tour.db.
+ * All the methods are private since no other program should call and use them.
  * Before running this program it is recommended to run MakeDatabase.java.
  */
 public class PopulateDatabase {
@@ -25,6 +26,9 @@ public class PopulateDatabase {
     private final String url;
     private final String dbName;
 
+    /**
+     * The constructor. It initializes the instance variables.
+     */
     private PopulateDatabase() {
         tdb = new TourDb();
         ddb = new DateDb();
@@ -50,8 +54,10 @@ public class PopulateDatabase {
     }
 
     /**
-     * @param fileName
-     * @return
+     * Reads .txt file into BufferedReader.
+     *
+     * @param fileName Name of .txt file in form of String.
+     * @return BufferedReader that has read in the .tct file.
      * @throws IOException
      */
     private BufferedReader readFile(String fileName) throws IOException {
@@ -61,6 +67,9 @@ public class PopulateDatabase {
         return Files.newBufferedReader(path);
     }
 
+    /**
+     * Clears all tables within tourdb.
+     */
     private void clearTables() {
         Statement stmt;
         try (Connection conn = DriverManager.getConnection(url)) {
@@ -76,6 +85,9 @@ public class PopulateDatabase {
         }
     }
 
+    /**
+     * Populates the Tours table in tour.db with fake data.
+     */
     private void makeTours() {
         try (Connection conn = DriverManager.getConnection(url)) {
             BufferedReader br = readFile("tours.txt");
@@ -101,6 +113,9 @@ public class PopulateDatabase {
         }
     }
 
+    /**
+     * Populates the Dates table in tour.db with fake data.
+     */
     private void makeDates() {
         try (Connection conn = DriverManager.getConnection(url)) {
             conn.setAutoCommit(false);

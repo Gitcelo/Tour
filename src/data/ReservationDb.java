@@ -6,25 +6,30 @@ import Model.TourDate;
 import java.sql.*;
 import static application.Utils.*;
 
+/**
+ * Object that can do queries on the Reservations table.
+ */
 public class ReservationDb {
-    private Connection conn = null;
+    private final String url;
 
-    public ReservationDb(){}
-
-    /** Booking function.
-     *
-     * @param tour the tour to be booked
-     * @param date the date for the given tour
-     * @param noOfSeats number of seats to be booked
-     * @param customerName name of the customer making reservation
-     * @param customerEmail email of the customer making reservation
-     * @return true if booking successful, false otherwise
+    /**
+     * Constructor that initializes the instance variable url.
      */
-    public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail, Connection conn) throws SQLException {
-        try {
-            String url = conn.getMetaData().getURL();
-            if(!url.equals(getUrlAndDatabase()[0])) throw new IllegalArgumentException("Incorrect database connection");
-        } catch (SQLException e) {
+    public ReservationDb(){ url = getUrlAndDatabase()[0]; }
+
+    /**
+     * Bookins a reservation.
+     *
+     * @param tour The tour to be booked
+     * @param date The date for the given tour
+     * @param noOfSeats Number of seats to be booked
+     * @param customerName Name of the customer making reservation
+     * @param customerEmail Email of the customer making reservation
+     * @param conn The connection to the database
+     * @return True if booking successful, false otherwise
+     */
+    public int makeReservation(Tour tour, TourDate date, int noOfSeats,String customerName, String customerEmail, Connection conn) {
+        if(!validConnection(conn)) {
             throw new IllegalArgumentException("Incorrect database connection");
         }
         String query = "INSERT INTO Reservations ("
@@ -57,15 +62,20 @@ public class ReservationDb {
         return 0;
     }
 
+    /**
+     * Fetches a reservation from the reservations table.
+     * @param reservationId Identification number of reservation to be fetched.
+     * @return The reservation if it exists, otherwise an empty and invalid Reservation object.
+     */
     public Reservation fetchReservationById(int reservationId) {
         String query = "SELECT * FROM Reservations WHERE "
                 + "reservationId="
                 + reservationId;
-        try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
+        try (Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
             conn.setAutoCommit(false);
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            Reservation reservation = new Reservation();
+            Reservation reservation;
             String q = "SELECT * FROM Dates WHERE "
                     + "tourId = " + rs.getInt("tourId")
                     + "AND tourDate = " + rs.getDate("tourDate");
@@ -77,30 +87,38 @@ public class ReservationDb {
             );
             reservation = new Reservation(
                     td,
-                    rs.getInt("reservstionId"),
+                    rs.getInt("reservationId"),
                     rs.getInt("noOfSeats"),
                     rs.getString("customerName"),
                     rs.getString("customerEmail")
             );
+            stmt.close();
+            rs.close();
             return reservation;
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new Reservation();
     }
 
+    /**
+     * Cancels a reservation.
+     *
+     * @param reservationId Identification number of the reservation that is being cancelled.
+     * @return True if able to cancel reservation, false otherwise.
+     */
     public boolean removeReservation(int reservationId) {
         String query = "DELETE FROM Reservations WHERE reservationId = ?";
         try(Connection conn = DriverManager.getConnection(getUrlAndDatabase()[0])){
             conn.setAutoCommit(false);
-            PreparedStatement pt = conn.prepareStatement(query);
-            pt.setInt(1,reservationId);
-            int result = pt.executeUpdate();
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1,reservationId);
+            int result = ps.executeUpdate();
+            ps.close();
             conn.commit();
             return result > 0;
         }catch (SQLException e){
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 }

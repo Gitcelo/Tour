@@ -5,7 +5,18 @@ import java.sql.*;
 import static application.Utils.getUrlAndDatabase;
 import static application.Utils.getSrcPath;
 
+/**
+ * @author Team 3D
+ *
+ * Program that creates the database and puts it into the file tour.db.
+ */
 public class MakeDatabase {
+
+    /**
+     * The function that creates the database.
+     *
+     * @throws SQLException If the program isn't able to close the connection properly.
+     */
     private static void createDatabase() throws SQLException {
         Connection conn = null;
         Statement stmt;
@@ -42,6 +53,7 @@ public class MakeDatabase {
             }
 
         } catch(SQLException | IOException e) {
+            System.err.println("--Could not create database--");
             e.printStackTrace();
         } finally {
             if(conn!=null) conn.close();
@@ -52,7 +64,6 @@ public class MakeDatabase {
         try {
             createDatabase();
         } catch (SQLException e) {
-            System.err.println("Could not create database");
             e.printStackTrace();
         }
     }
