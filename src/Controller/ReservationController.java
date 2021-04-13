@@ -47,7 +47,7 @@ public class ReservationController {
      * @param reservationId Identification number of booking to be found.
      * @return Valid Reservation object if the booking exists, otherwise an invalid and empty Reservation object.
      */
-    public Reservation findBooking(int reservationId) {
+    public Reservation searchBooking(int reservationId) {
         if(reservationId<=0) {
             throw new IllegalArgumentException("The reservation id must be greater than or equal to zero.");
         }

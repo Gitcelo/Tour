@@ -192,7 +192,7 @@ public class TourDb implements MakeConnection {
      */
     public boolean removeTour(int tourId) {
         validConnection(conn);
-        String query = "DELETE FROM Reservations WHERE tourId = ?";
+        String query = "DELETE FROM Reservations WHERE tourId = ? CASCADE";
         try {
             conn.setAutoCommit(false);
             PreparedStatement ps = conn.prepareStatement(query);
