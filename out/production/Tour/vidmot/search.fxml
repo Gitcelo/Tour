@@ -3,24 +3,24 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="899.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vidmot.SearchController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="989.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vidmot.SearchController">
    <children>
-      <ScrollPane layoutX="25.0" layoutY="174.0" prefHeight="258.0" prefWidth="651.0">
+      <ScrollPane layoutX="25.0" layoutY="174.0" prefHeight="258.0" prefWidth="759.0">
          <content>
-            <TableView fx:id="tourTable" prefHeight="263.0" prefWidth="635.0">
+            <TableView fx:id="tourTable" prefHeight="263.0" prefWidth="744.0">
               <columns>
                 <TableColumn prefWidth="103.0" text="Name" />
-                <TableColumn prefWidth="164.0" text="Description" />
+                <TableColumn prefWidth="196.0" text="Description" />
                   <TableColumn prefWidth="69.0" text="Price" />
-                  <TableColumn prefWidth="67.0" text="Difficulty" />
-                  <TableColumn prefWidth="74.0" text="Location" />
-                  <TableColumn prefWidth="53.0" text="Safe" />
-                  <TableColumn prefWidth="103.0" text="Provider" />
+                  <TableColumn prefWidth="117.0" text="Difficulty" />
+                  <TableColumn prefWidth="72.0" text="Location" />
+                  <TableColumn prefWidth="63.0" text="Safe" />
+                  <TableColumn prefWidth="123.0" text="Provider" />
               </columns>
             </TableView>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="702.0" layoutY="174.0" prefHeight="258.0" prefWidth="172.0">
+      <ScrollPane layoutX="803.0" layoutY="174.0" prefHeight="258.0" prefWidth="172.0">
          <content>
             <TableView fx:id="dateTable" prefHeight="263.0" prefWidth="154.0">
               <columns>
@@ -39,7 +39,8 @@
       <ComboBox fx:id="comboLoc" layoutX="388.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Location" />
       <TextField fx:id="startLabel" layoutX="504.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Start date" />
       <TextField fx:id="endLabel" layoutX="627.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="End date" />
-      <Button fx:id="search" layoutX="766.0" layoutY="60.0" mnemonicParsing="false" onAction="#searchHandler" prefHeight="25.0" prefWidth="104.0" text="Search" />
+      <Button fx:id="search" layoutX="870.0" layoutY="60.0" mnemonicParsing="false" onAction="#searchHandler" prefHeight="25.0" prefWidth="104.0" text="Search" />
       <Button fx:id="book" layoutX="766.0" layoutY="470.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Book" />
+      <ComboBox fx:id="comboSeats" layoutX="746.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Seats" />
    </children>
 </AnchorPane>

@@ -33,11 +33,14 @@ public class SearchController implements Initializable {
     @FXML
     private TextField endLabel;
     @FXML
+    private ComboBox<Integer> comboSeats;
+    @FXML
     private Button search;
     @FXML
     private Button book;
     private static final String[] diff = { "Handicap", "Easy", "Medium", "Hard" };
     private static final String[] loc = { "Reykjavík", "Akureyri", "Ísafjörður", "Egilsstaðir" };
+    private final Integer[] seats = { 1, 2, 3, 4, 5 };
     private TourController tc;
 
     @Override
@@ -51,8 +54,10 @@ public class SearchController implements Initializable {
     private void initComboBoxes() {
         ObservableList<String> diffList = FXCollections.observableArrayList(diff);
         ObservableList<String> locList = FXCollections.observableArrayList(loc);
+        ObservableList<Integer> seatList = FXCollections.observableArrayList(seats);
         comboDiff.setItems(diffList);
         comboLoc.setItems(locList);
+        comboSeats.setItems(seatList);
     }
 
     @FXML
@@ -70,10 +75,11 @@ public class SearchController implements Initializable {
                 LocalDate.parse(startDate, dateTimeFormatter),
                 LocalDate.parse(endDate, dateTimeFormatter)
         };
+        int groupSize = comboSeats.getSelectionModel().getSelectedItem();
         Parameters p = new Parameters(
                 difficulty,
                 priceRange,
-                1,
+                groupSize,
                 dates,
                 0,
                 location
