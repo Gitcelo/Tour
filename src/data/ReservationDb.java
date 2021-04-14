@@ -47,7 +47,7 @@ public class ReservationDb implements MakeConnection {
     }
 
     /**
-     * Books a reservation.
+     * Makes a reservation.
      *
      * @param tour The tour to be booked
      * @param date The date for the given tour
@@ -149,13 +149,13 @@ public class ReservationDb implements MakeConnection {
     public boolean removeReservation(int reservationId) {
         validConnection(conn);
         String deleteReservationQuery = "DELETE FROM Reservations WHERE reservationId = ?";
-        String selectReservationQquery = "SELECT * FROM Reservations WHERE reservationId = ?";
+        String selectReservationQuery = "SELECT * FROM Reservations WHERE reservationId = ?";
         String updateDatesQuery = "UPDATE Dates SET availableSeats = availableSeats + ? "
                 + "WHERE tourId = ? AND tourDate = ?";
         try {
             conn.setAutoCommit(false);
             //Update Dates
-            ResultSet rs = conn.createStatement().executeQuery(selectReservationQquery);//saekja reservation row
+            ResultSet rs = conn.createStatement().executeQuery(selectReservationQuery);
             PreparedStatement psDates = conn.prepareStatement(updateDatesQuery);
             psDates.setInt(1,reservationId);
             psDates.setInt(2,rs.getInt("tourId"));

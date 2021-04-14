@@ -62,8 +62,8 @@ public class ReservationController {
     /**
      * Cancels a booking.
      *
-     * @param reservationId
-     * @return
+     * @param reservationId Identification number for the booking
+     * @return true if cancelling reservation succeeded, false otherwise
      */
     public boolean cancelBooking(int reservationId) {
         if(reservationId<=0) {
