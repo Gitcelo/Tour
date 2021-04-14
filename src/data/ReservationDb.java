@@ -47,7 +47,7 @@ public class ReservationDb implements MakeConnection {
     }
 
     /**
-     * Bookins a reservation.
+     * Books a reservation.
      *
      * @param tour The tour to be booked
      * @param date The date for the given tour

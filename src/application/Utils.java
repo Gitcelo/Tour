@@ -88,6 +88,6 @@ public class Utils {
     {
         Pattern emailPattern = Pattern.compile("[a-zA-Z0-9[!#$%&'()*+,/\\-_\\.\"]]+@[a-zA-Z0-9[!#$%&'()*+,/\\-_\"]]+\\.[a-zA-Z0-9[!#$%&'()*+,/\\-_\"\\.]]+");
         Matcher m = emailPattern.matcher(email);
-        return !m.matches();
+        return m.matches();
     }
 }
