@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="899.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vidmot.SearchController">
+   <children>
+      <ScrollPane layoutX="25.0" layoutY="174.0" prefHeight="258.0" prefWidth="651.0">
+         <content>
+            <TableView fx:id="tourTable" prefHeight="263.0" prefWidth="635.0">
+              <columns>
+                <TableColumn prefWidth="103.0" text="Name" />
+                <TableColumn prefWidth="164.0" text="Description" />
+                  <TableColumn prefWidth="69.0" text="Price" />
+                  <TableColumn prefWidth="67.0" text="Difficulty" />
+                  <TableColumn prefWidth="74.0" text="Location" />
+                  <TableColumn prefWidth="53.0" text="Safe" />
+                  <TableColumn prefWidth="103.0" text="Provider" />
+              </columns>
+            </TableView>
+         </content>
+      </ScrollPane>
+      <ScrollPane layoutX="702.0" layoutY="174.0" prefHeight="258.0" prefWidth="172.0">
+         <content>
+            <TableView fx:id="dateTable" prefHeight="263.0" prefWidth="154.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Date" />
+                <TableColumn prefWidth="75.0" text="Availability" />
+              </columns>
+            </TableView>
+         </content>
+      </ScrollPane>
+      <Label layoutX="321.0" layoutY="146.0" prefHeight="17.0" prefWidth="59.0" text="Tours" />
+      <Label layoutX="777.0" layoutY="146.0" prefHeight="17.0" prefWidth="41.0" text="Dates" />
+      <Label layoutX="25.0" layoutY="29.0" prefHeight="17.0" prefWidth="123.0" text="Search for day tours" />
+      <ComboBox fx:id="comboDiff" layoutX="25.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Difficulty" />
+      <TextField fx:id="minLabel" layoutX="148.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Min price" />
+      <TextField fx:id="maxLabel" layoutX="269.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Max price" />
+      <ComboBox fx:id="comboLoc" layoutX="388.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Location" />
+      <TextField fx:id="startLabel" layoutX="504.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="Start date" />
+      <TextField fx:id="endLabel" layoutX="627.0" layoutY="60.0" prefHeight="25.0" prefWidth="104.0" promptText="End date" />
+      <Button fx:id="search" layoutX="766.0" layoutY="60.0" mnemonicParsing="false" onAction="#searchHandler" prefHeight="25.0" prefWidth="104.0" text="Search" />
+      <Button fx:id="book" layoutX="766.0" layoutY="470.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Book" />
+   </children>
+</AnchorPane>

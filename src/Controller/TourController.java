@@ -15,6 +15,11 @@ public class TourController {
     private final TourDb tourDb = new TourDb();
 
     /**
+     * Empty constructor.
+     */
+    public TourController() {}
+
+    /**
      * Creates a new tour and inserts it into the Tours table.
      *
      * @param tourName Name of the tour.

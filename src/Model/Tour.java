@@ -1,5 +1,8 @@
 package Model;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -12,16 +15,16 @@ import java.util.ArrayList;
  */
 public class Tour {
     private ObservableList<TourDate> dates;
-    private int tourId;
-    private String tourName;
-    private String description;
-    private int price;
-    private int difficulty;
-    private int location;
-    private int childFriendly;
-    private int season;
-    private String providerName;
-    private final boolean validTour;
+    private SimpleIntegerProperty tourId;
+    private SimpleStringProperty tourName;
+    private SimpleStringProperty description;
+    private SimpleIntegerProperty price;
+    private SimpleIntegerProperty difficulty;
+    private SimpleIntegerProperty location;
+    private SimpleIntegerProperty childFriendly;
+    private SimpleIntegerProperty season;
+    private SimpleStringProperty providerName;
+    private final boolean validTour; //true if tour can be inserted into database
 
     /**
      * Constructor for empty Tour object that is not valid for insertion into the Tours table.
@@ -66,40 +69,39 @@ public class Tour {
         }
 
         dates = FXCollections.observableArrayList();
-        this.tourId = tourId;
-        this.tourName = tourName;
-        this.description = description;
-        this.price = price;
-        this.difficulty = difficulty;
-        this.location = location;
-        this.childFriendly = childFriendly;
-        this.season = season;
-        this.providerName = providerName;
+        this.tourId = new SimpleIntegerProperty(tourId);
+        this.tourName = new SimpleStringProperty(tourName);
+        this.description = new SimpleStringProperty(description);
+        this.price = new SimpleIntegerProperty(price);
+        this.difficulty = new SimpleIntegerProperty(difficulty);
+        this.location = new SimpleIntegerProperty(location);
+        this.childFriendly = new SimpleIntegerProperty(childFriendly);
+        this.season = new SimpleIntegerProperty(season);
+        this.providerName = new SimpleStringProperty(providerName);
         validTour = true;
     }
 
     public ObservableList<TourDate> getDates(){ return dates; }
 
-    public int getTourId() {return tourId;}
+    public int getTourId() {return tourId.get();}
 
-    public String getTourName(){ return tourName; }
+    public String getTourName(){ return tourName.get(); }
 
-    public String getDescription(){ return description; }
+    public String getDescription(){ return description.get(); }
 
-    public int getPrice(){ return price; }
+    public int getPrice(){ return price.get(); }
 
-    public int getDifficulty(){ return difficulty; }
+    public int getDifficulty(){ return difficulty.get(); }
 
-    public String getProvider(){ return providerName; }
+    public String getProvider(){ return providerName.get(); }
     
-    public int getLocation(){ return location; }
+    public int getLocation(){ return location.get(); }
 
     public boolean isChildFriendly(){
-        if(childFriendly==1) return true;
-        return false;
+        return childFriendly.get()==1;
     }
 
-    public int getSeason(){ return season; }
+    public int getSeason(){ return season.get(); }
 
     public boolean getValidTour() { return validTour; }
 
