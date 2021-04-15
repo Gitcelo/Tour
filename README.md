@@ -39,3 +39,6 @@
 
 ## Integration
 * For the integration the cluster will need all the packages except for `vidmot`
+* The only classes needed for the integration (apart for MakeDatabase and PopulateDatabase as 
+  mentioned above) are the two classes in the `Controller` package. `ReservationController` contains
+  the booking method and `TourController` contains the search method.
