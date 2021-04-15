@@ -20,7 +20,7 @@
 
 ***
 
-##Dependencies
+## Dependencies
 * **JavaFX**: How to set up JavaFX in IntelliJ and a link to download it can be found here
   https://www.jetbrains.com/help/idea/javafx.html
 * **JDBC-sqlite**: Can be downloaded from here: https://dbschema.com/jdbc-driver/Sqlite.html
