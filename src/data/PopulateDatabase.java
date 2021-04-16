@@ -95,7 +95,7 @@ public class PopulateDatabase {
             int num=-1;
             tdb.openConnection();
             while ((line = br.readLine()) != null) {
-                String[] stringArray = line.split(",");
+                String[] stringArray = line.split(";");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
                 num = tdb.makeTour(
                         lineArray[0],
@@ -128,7 +128,7 @@ public class PopulateDatabase {
             String line;
             ddb.openConnection();
             while ((line = br.readLine()) != null) {
-                String[] stringArray = line.split(",");
+                String[] stringArray = line.split(";");
                 String[] lineArray = Arrays.stream(stringArray).map(String::trim).toArray(String[]::new);
                 java.util.Date date = sdf.parse(lineArray[1]);
                 Date sqlDate = new Date(date.getTime());
