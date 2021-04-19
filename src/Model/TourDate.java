@@ -39,7 +39,7 @@ public class TourDate {
      * @param seatCount Negative number if booking is made, positive if booking is cancelled.
      * @return true if updating seat was valid, false otherwise
      */
-    public boolean updateSeat(int seatCount) {
+    public boolean updateSeatCount(int seatCount) {
         int updatedSeats = availableSeats + seatCount;
         if(updatedSeats >= 0 && updatedSeats <= maxSeats) {
             availableSeats = updatedSeats;

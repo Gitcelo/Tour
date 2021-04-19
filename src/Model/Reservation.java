@@ -50,5 +50,5 @@ public class Reservation {
 
     public String getCustomerEmail() { return customerEmail; }
 
-    public boolean getValid() { return validReservation; }
+    public boolean getValidReservation() { return validReservation; }
 }
