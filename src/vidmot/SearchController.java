@@ -119,6 +119,8 @@ public class SearchController implements Initializable {
 
     @FXML
     private void searchHandler() {
+        tourTable.getItems().clear();
+        dateTable.getItems().clear();
         ObservableList<Node> searchList = searchBox.getChildren();
         int difficulty = convertDifficulty(((ComboBox<String>) searchList.get(0)).getSelectionModel().getSelectedItem());
         int location = convertLocation(((ComboBox<String>) searchList.get(3)).getSelectionModel().getSelectedItem());
@@ -140,6 +142,7 @@ public class SearchController implements Initializable {
                 location
         );
         ot = tc.searchTour(p);
+        if(!ot.get(0).getValidTour()) return;
         tourTable.setItems(ot);
     }
 
