@@ -14,9 +14,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
+import javax.swing.event.ChangeListener;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class SearchController implements Initializable {
@@ -26,20 +29,21 @@ public class SearchController implements Initializable {
     private TableColumn<Tour,String> cDesc;
     @FXML
     private TableColumn<Tour,Integer> cPrice;
+    //We haven't implemented converting tags from their integer values to String values in the table
     @FXML
-    private TableColumn<Tour,String> cDiff;
+    private TableColumn<Tour,Integer> cDiff;
     @FXML
-    private TableColumn<Tour,String> cLoc;
+    private TableColumn<Tour,Integer> cLoc;
     @FXML
-    private TableColumn<Tour,String> cSafe;
+    private TableColumn<Tour,Boolean> cSafe;
     @FXML
     private TableColumn<Tour,String> cProv;
     @FXML
     private TableView<Tour> tourTable;
     @FXML
-    private TableColumn<Tour,String> cDate;
+    private TableColumn<Tour, LocalDateTime> cDate;
     @FXML
-    private TableColumn<Tour,String> cAvail;
+    private TableColumn<Tour,Integer> cAvail;
     @FXML
     private TableView<TourDate> dateTable;
     @FXML
@@ -64,6 +68,7 @@ public class SearchController implements Initializable {
         dateTable.setPlaceholder(new Label("Tour dates"));
         initComboBoxes();
         initTableColumns();
+        initDatePickers();
     }
 
     private void initComboBoxes() {
@@ -86,6 +91,30 @@ public class SearchController implements Initializable {
         cPrice.setCellValueFactory(
                 new PropertyValueFactory<Tour,Integer>("price")
         );
+        cDiff.setCellValueFactory(
+                new PropertyValueFactory<Tour,Integer>("difficulty")
+        );
+        cLoc.setCellValueFactory(
+                new PropertyValueFactory<Tour,Integer>("location")
+        );
+        cSafe.setCellValueFactory(
+                new PropertyValueFactory<Tour,Boolean>("childFriendly")
+        );
+        cProv.setCellValueFactory(
+                new PropertyValueFactory<Tour,String>("providerName")
+        );
+        cDate.setCellValueFactory(
+                new PropertyValueFactory<Tour,LocalDateTime>("date")
+        );
+        cAvail.setCellValueFactory(
+                new PropertyValueFactory<Tour,Integer>("availableSeats")
+        );
+    }
+
+    private void initDatePickers() {
+        ObservableList<Node> searchList = searchBox.getChildren();
+        ((DatePicker) searchList.get(4)).setValue(LocalDate.now().plusDays(1));
+        ((DatePicker) searchList.get(5)).setValue(LocalDate.now().plusDays(2));
     }
 
     @FXML
@@ -97,16 +126,11 @@ public class SearchController implements Initializable {
                 Integer.parseInt(((TextField) searchList.get(1)).getText()),
                 Integer.parseInt(((TextField) searchList.get(2)).getText())
         };
-        String startDate = ((TextField) searchList.get(4)).getText();
-        String endDate = ((TextField) searchList.get(5)).getText();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate[] dates = {
-                LocalDate.parse(startDate, dateTimeFormatter),
-                LocalDate.parse(endDate, dateTimeFormatter)
+                ((DatePicker) searchList.get(4)).getValue(),
+                ((DatePicker) searchList.get(5)).getValue()
         };
         int groupSize = ((ComboBox<Integer>) searchList.get(6)).getSelectionModel().getSelectedItem();
-        System.out.println(groupSize);
-        System.out.println(dates[0] +" "+dates[1]);
         Parameters p = new Parameters(
                 difficulty,
                 priceRange,
@@ -116,15 +140,33 @@ public class SearchController implements Initializable {
                 location
         );
         ot = tc.searchTour(p);
-        for(Tour t: ot) {
-            System.out.println(t.getValidTour());
-        }
         tourTable.setItems(ot);
     }
 
     @FXML
     private void bookHandler() {
+        ObservableList<Node> bookList = bookBox.getChildren();
+        if(tourTable.getSelectionModel().getSelectedItem() != null &&
+           dateTable.getSelectionModel().getSelectedItem() != null &&
+           ((TextField) bookList.get(0)).getText()!="" &&
+           ((TextField) bookList.get(1)).getText()!="") {
 
+            int confirm = rc.confirmBooking(tourTable.getSelectionModel().getSelectedItem(),
+                              dateTable.getSelectionModel().getSelectedItem(),
+                    ((ComboBox<Integer>) searchBox.getChildren().get(6)).getSelectionModel().getSelectedItem(),
+                    ((TextField) bookList.get(0)).getText(),
+                    ((TextField) bookList.get(1)).getText());
+            System.out.println(confirm);
+            fxBooked.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void clickedTourRowHandler() {
+        if (tourTable.getSelectionModel().getSelectedItem() != null) {
+            int idx  = tourTable.getSelectionModel().getSelectedIndex();
+            dateTable.setItems(ot.get(idx).getDates());
+        }
     }
 
     private int convertLocation(String difficulty) {
@@ -156,5 +198,4 @@ public class SearchController implements Initializable {
                 throw new IllegalArgumentException("Invalid location");
         }
     }
-
 }

@@ -8,7 +8,7 @@
    <children>
       <ScrollPane layoutX="25.0" layoutY="146.0" prefHeight="286.0" prefWidth="759.0">
          <content>
-            <TableView fx:id="tourTable" prefHeight="286.0" prefWidth="744.0" style="-fx-focus-traversable: false;">
+            <TableView fx:id="tourTable" onMouseClicked="#clickedTourRowHandler" prefHeight="286.0" prefWidth="744.0" style="-fx-focus-traversable: false;">
               <columns>
                 <TableColumn fx:id="cName" prefWidth="103.0" text="Name" />
                 <TableColumn fx:id="cDesc" prefWidth="196.0" text="Description" />
@@ -32,15 +32,15 @@
          </content>
       </ScrollPane>
       <Label layoutX="25.0" layoutY="29.0" prefHeight="17.0" prefWidth="123.0" text="Search for day tours" />
-      <Label fx:id="fxBooked" alignment="CENTER" layoutX="870.0" layoutY="526.0" prefHeight="17.0" prefWidth="104.0" style="-fx-text-background-color: green; -fx-font-weight: bold;" text="Booking made" visible="false" />
+      <Label fx:id="fxBooked" alignment="CENTER" layoutX="861.0" layoutY="526.0" prefHeight="17.0" prefWidth="104.0" style="-fx-text-background-color: green; -fx-font-weight: bold;" text="Booking made!" visible="false" />
       <HBox fx:id="searchBox" layoutX="25.0" layoutY="57.0" prefHeight="44.0" prefWidth="950.0" spacing="20.0">
          <children>
             <ComboBox fx:id="comboDiff" prefHeight="25.0" prefWidth="104.0" promptText="Difficulty" />
             <TextField fx:id="minLabel" prefHeight="25.0" prefWidth="104.0" promptText="Min price" />
             <TextField fx:id="maxLabel" prefHeight="25.0" prefWidth="104.0" promptText="Max price" />
             <ComboBox fx:id="comboLoc" prefHeight="25.0" prefWidth="104.0" promptText="Location" />
-            <TextField fx:id="startLabel" prefHeight="25.0" prefWidth="104.0" promptText="Start date" />
-            <TextField fx:id="endLabel" prefHeight="25.0" prefWidth="104.0" promptText="End date" />
+            <DatePicker prefHeight="25.0" prefWidth="119.0" />
+            <DatePicker prefHeight="25.0" prefWidth="132.0" />
             <ComboBox fx:id="comboSeats" prefHeight="25.0" prefWidth="104.0" promptText="Seats" />
             <Button fx:id="search" mnemonicParsing="false" onAction="#searchHandler" prefHeight="25.0" prefWidth="104.0" text="Search">
                <HBox.margin>
@@ -49,10 +49,10 @@
             </Button>
          </children>
       </HBox>
-      <HBox fx:id="bookBox" layoutX="41.0" layoutY="488.0" prefHeight="25.0" prefWidth="934.0" spacing="10.0">
+      <HBox fx:id="bookBox" layoutX="25.0" layoutY="488.0" prefHeight="25.0" prefWidth="950.0" spacing="10.0">
          <children>
-            <TextField promptText="Name" />
-            <TextField promptText="E-mail" />
+            <TextField fx:id="fxName" promptText="Name" />
+            <TextField fx:id="fxEmail" promptText="E-mail" />
             <Button fx:id="book" mnemonicParsing="false" onAction="#bookHandler" prefHeight="25.0" prefWidth="104.0" style="-fx-focus-traversable: false;" text="Matthias">
                <HBox.margin>
                   <Insets left="520.0" />

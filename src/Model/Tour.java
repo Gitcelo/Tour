@@ -93,7 +93,7 @@ public class Tour {
 
     public int getDifficulty(){ return difficulty.get(); }
 
-    public String getProvider(){ return providerName.get(); }
+    public String getProviderName(){ return providerName.get(); }
     
     public int getLocation(){ return location.get(); }
 

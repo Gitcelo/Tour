@@ -71,7 +71,7 @@ public class TourController {
      */
     public ObservableList<Tour> searchTour(Parameters p) {
         int difficulty = p.getdifficulty();
-        if(10<difficulty&&difficulty<13) {
+        if(difficulty<10||difficulty>13) {
             throw new IllegalArgumentException("Difficulty must be between 10 and 13 inclusive");
         }
         int[] price = {p.getLowerPrice(), p.getMaxPrice()};
@@ -91,7 +91,7 @@ public class TourController {
             throw new IllegalArgumentException("Location must be greater than zero");
         }
         LocalDate[] dateRange = {p.getcheckIn(), p.getcheckOut()};
-        if(dateRange[0].isBefore(LocalDate.now())) {
+        if(dateRange[0]==null || dateRange[0].isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("Check in date can't come before the current date");
         }
         if(dateRange[0].isAfter(dateRange[1])) {
