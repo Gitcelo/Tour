@@ -57,7 +57,7 @@ as can be seen below.
 
 <img src = "./images/vidmot3.PNG">
 
-After choosing the tour and date, fill in the "Name" and "E-mail" textfields. The value of the "E-mail" text field
+After choosing the tour and date, fill in the "Name" and "E-mail" text fields. The value of the "E-mail" text field
 must contain one "@" and one "." . To Book press the "Matthias" button.
 
 <img src = "./images/vidmot4.PNG">
