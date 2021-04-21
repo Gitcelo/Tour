@@ -41,4 +41,4 @@
 
 If main is run, the UI below should appear
 
-![User Interface](https://github.com/Gitcelo/Tour/tree/main/images.PNG)
+<img src = "./images/vidmot1.PNG">
